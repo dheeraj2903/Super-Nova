@@ -3,7 +3,10 @@ const request = require("supertest");
 const app = require("../src/app");
 const User = require("../src/models/user.model");
 
-describe("POST /auth/register", () => {
+// Set dummy JWT secret for testing environment
+process.env.JWT_SECRET = process.env.JWT_SECRET || "test_secret_key_123";
+
+describe("POST /api/auth/register", () => {
 
     it("should successfully register a new user", async () => {
         const userData = {
@@ -17,13 +20,14 @@ describe("POST /auth/register", () => {
             role: "user"
         };
 
+        // CHANGE HERE: /api/auth/register (added /api)
         const res = await request(app)
-            .post("/auth/register")
+            .post("/api/auth/register") 
             .send(userData);
 
-        // Agar tumhara controller 200 de raha hai toh 200 ya 201 match karega
-        expect([200, 201]).toContain(res.statusCode);
-        expect(res.body).toHaveProperty("message");
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toHaveProperty("message", "User registered successfully");
+        expect(res.body).toHaveProperty("user");
 
         // DB record verify
         const createdUser = await User.findOne({ email: "dheeraj@example.com" });
@@ -36,8 +40,9 @@ describe("POST /auth/register", () => {
             email: "incomplete@example.com"
         };
 
+        // CHANGE HERE: /api/auth/register (added /api)
         const res = await request(app)
-            .post("/auth/register")
+            .post("/api/auth/register")
             .send(incompleteData);
 
         expect(res.statusCode).toBeGreaterThanOrEqual(400);
