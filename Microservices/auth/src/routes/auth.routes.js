@@ -12,6 +12,6 @@ router.post("/register", validators.registerUserValidations, authController.regi
 router.post("/login", validators.loginUserValidations, authController.loginUser);
 
 //GET /api/auth/me
-router.get('/me', authController.test)
+router.get('/me', authController.getCurrentUser)
 
 module.exports = router
