@@ -12,6 +12,12 @@ router.post("/register", validators.registerUserValidations, authController.regi
 router.post("/login", validators.loginUserValidations, authController.loginUser);
 
 //GET /api/auth/me
-router.get('/me',authMiddleware.authMiddleware, authController.getCurrentUser)
+router.get('/me',authMiddleware.authMiddleware, authController.getCurrentUser);
+
+//GET /api/auth/logout
+router.get("/logout", authController.logoutUser);
+
+//GET /api/auth/users/me/addresses
+router.get('/users/me/addresses', authMiddleware.authMiddleware, authController.getUserAddresses)
 
 module.exports = router
