@@ -32,6 +32,11 @@ const registerUserValidations = [
     .withMessage("Last name must be a string")
     .notEmpty()
     .withMessage("Last name is requiried"),
+
+  body("role")
+    .optional()
+    .isIn([ 'user', 'seller' ])
+    .withMessage("Role must be either 'user' or 'seller'"),
   responseWithValidationErrors,
 ];
 
