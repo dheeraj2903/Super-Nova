@@ -14,13 +14,25 @@ async function createProduct(req, res) {
 
         const price = {
             amount: Number(priceAmount),
-            currency: priceAmount,
+            currency: priceCurrency,
         }
 
-        const image = [];
-        const files = Array.isArray(req.files) ? req.files : (req.files?.image || []);
+        const images =  await Promise.all((req.files || []).map(file => uploadImage({ buffer: file.buffer})))
+
+        const product = await Product.create({
+            title,
+            description,
+            price,
+            seller,
+            images
+        });
+        return res.status(201).json({
+            message: "Product created",
+            data: product
+        })
     } catch (err) {
-        
+        console.error('Create product error', err);
+        return res.status(500).json({ message: 'Internal server error'})
     }    
 }
 

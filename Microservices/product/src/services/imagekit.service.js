@@ -1,16 +1,16 @@
-const ImageKit = require("imagekit");
+const Imagekit = require("imagekit");
 const {v4 : uuidv4} = require('uuid');
 
-const imagekit = new imagekit({
+const imagekit = new Imagekit({
     publicKey: process.env.IMAGEKIT_PUBLIC_KEY || "test_public",
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY || "test_private",
     urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT || "https://ik.imagekit.io/demo",
 })
 
-async function uploadImage({ buffer, filename, folder = '/products' }) {
+async function uploadImage({ buffer, folder = '/products' }) {
     const res = await imagekit.upload({
         file: buffer,
-        fileName: uuidv4,
+        fileName: uuidv4(),
         folder
     });
 
