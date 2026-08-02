@@ -12,6 +12,11 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ]
+  },
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",

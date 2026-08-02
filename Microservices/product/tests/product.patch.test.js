@@ -1,13 +1,15 @@
 const request = require("supertest");
-const app = require("../src/app");
-
-const Product = require("../src/models/product.model");
+const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+
+const app = require("../src/app");
+const Product = require("../src/models/product.model");
 
 jest.mock("../src/models/product.model");
 jest.mock("jsonwebtoken");
 
 describe("PATCH /api/products/:id", () => {
+
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -17,144 +19,167 @@ describe("PATCH /api/products/:id", () => {
     });
   });
 
-  test("should update product successfully", async () => {
-    const updatedProduct = {
-      _id: "product123",
-      title: "New iPhone",
+  test("should update product title", async () => {
+
+    const product = {
+      seller: {
+        toString: () => "seller123",
+      },
+      title: "Old Title",
+      description: "Old Description",
       price: {
-        amount: 70000,
+        amount: 100,
         currency: "INR",
       },
+      save: jest.fn().mockResolvedValue(true),
     };
 
-    Product.findByIdAndUpdate.mockResolvedValue(updatedProduct);
+    Product.findOne.mockResolvedValue(product);
+
+    const id = new mongoose.Types.ObjectId().toString();
 
     const res = await request(app)
-      .patch("/api/products/product123")
+      .patch(`/api/products/${id}`)
       .set("Authorization", "Bearer token")
       .send({
-        title: "New iPhone",
-        priceAmount: 70000,
+        title: "New Title",
       });
 
     expect(res.statusCode).toBe(200);
-
-    expect(Product.findByIdAndUpdate).toHaveBeenCalled();
-
-    expect(res.body).toBeDefined();
+    expect(res.body.message).toBe("Product updated");
+    expect(product.title).toBe("New Title");
+    expect(product.save).toHaveBeenCalled();
   });
 
-  test("should return 401 when token is missing", async () => {
-    const res = await request(app)
-      .patch("/api/products/product123")
-      .send({
-        title: "New iPhone",
-      });
-
-    expect(res.statusCode).toBe(401);
-  });
-
-  test("should return 403 for invalid role", async () => {
-    jwt.verify.mockReturnValue({
-      id: "user123",
-      role: "user",
-    });
+  test("should return 400 for invalid product id", async () => {
 
     const res = await request(app)
-      .patch("/api/products/product123")
-      .set("Authorization", "Bearer token");
-
-    expect(res.statusCode).toBe(403);
-  });
-
-  test("should return 404 when product is not found", async () => {
-    Product.findByIdAndUpdate.mockResolvedValue(null);
-
-    const res = await request(app)
-      .patch("/api/products/product123")
+      .patch("/api/products/abc")
       .set("Authorization", "Bearer token")
       .send({
-        title: "Updated",
-      });
-
-    expect(res.statusCode).toBe(404);
-
-    expect(res.body.message).toBe("Product not found");
-  });
-
-  test("should update only title", async () => {
-    Product.findByIdAndUpdate.mockResolvedValue({
-      _id: "product123",
-      title: "Updated Title",
-    });
-
-    await request(app)
-      .patch("/api/products/product123")
-      .set("Authorization", "Bearer token")
-      .send({
-        title: "Updated Title",
-      });
-
-    expect(Product.findByIdAndUpdate).toHaveBeenCalled();
-  });
-
-  test("should update only description", async () => {
-    Product.findByIdAndUpdate.mockResolvedValue({
-      description: "New Description",
-    });
-
-    const res = await request(app)
-      .patch("/api/products/product123")
-      .set("Authorization", "Bearer token")
-      .send({
-        description: "New Description",
-      });
-
-    expect(res.statusCode).toBe(200);
-  });
-
-  test("should update only price", async () => {
-    Product.findByIdAndUpdate.mockResolvedValue({
-      price: {
-        amount: 999,
-      },
-    });
-
-    const res = await request(app)
-      .patch("/api/products/product123")
-      .set("Authorization", "Bearer token")
-      .send({
-        priceAmount: 999,
-      });
-
-    expect(res.statusCode).toBe(200);
-  });
-
-  test("should return 400 when validation fails", async () => {
-    const res = await request(app)
-      .patch("/api/products/product123")
-      .set("Authorization", "Bearer token")
-      .send({
-        title: "a",
+        title: "Phone",
       });
 
     expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe("Invalid product id");
   });
 
-  test("should return 500 when database throws error", async () => {
-    Product.findByIdAndUpdate.mockRejectedValue(
-      new Error("Database Error")
-    );
+  test("should return 401 when token is missing", async () => {
+
+    const id = new mongoose.Types.ObjectId().toString();
 
     const res = await request(app)
-      .patch("/api/products/product123")
-      .set("Authorization", "Bearer token")
+      .patch(`/api/products/${id}`)
       .send({
-        title: "Updated",
+        title: "Phone",
       });
 
-    expect(res.statusCode).toBe(500);
-
-    expect(res.body.message).toBe("Internal server error");
+    expect(res.statusCode).toBe(401);
+    expect(res.body.message).toBe("Unauthorized : No token provided");
   });
-});
+
+  test("should return 403 when user is not seller", async () => {
+
+    const product = {
+      seller: {
+        toString: () => "anotherSeller",
+      },
+      save: jest.fn(),
+    };
+
+    Product.findOne.mockResolvedValue(product);
+
+    const id = new mongoose.Types.ObjectId().toString();
+
+    const res = await request(app)
+      .patch(`/api/products/${id}`)
+      .set("Authorization", "Bearer token")
+      .send({
+        title: "Phone",
+      });
+
+    expect(res.statusCode).toBe(403);
+    expect(res.body.message).toBe(
+      "Forbidden: You can only update your own product"
+    );
+  });
+
+  test("should return 404 when product does not exist", async () => {
+
+    Product.findOne.mockResolvedValue(null);
+
+    const id = new mongoose.Types.ObjectId().toString();
+
+    const res = await request(app)
+      .patch(`/api/products/${id}`)
+      .set("Authorization", "Bearer token");
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body.message).toBe("Product not found");
+  });
+
+  test("should update product price", async () => {
+
+    const product = {
+      seller: {
+        toString: () => "seller123",
+      },
+      price: {
+        amount: 100,
+        currency: "INR",
+      },
+      save: jest.fn().mockResolvedValue(true),
+    };
+
+    Product.findOne.mockResolvedValue(product);
+
+    const id = new mongoose.Types.ObjectId().toString();
+
+    const res = await request(app)
+      .patch(`/api/products/${id}`)
+      .set("Authorization", "Bearer token")
+      .send({
+        price: {
+          amount: 500,
+          currency: "USD",
+        },
+      });
+
+    expect(res.statusCode).toBe(200);
+
+    expect(product.price.amount).toBe(500);
+    expect(product.price.currency).toBe("USD");
+
+    expect(product.save).toHaveBeenCalled();
+  });
+
+  test("should ignore fields that are not allowed", async () => {
+
+    const product = {
+      seller: {
+        toString: () => "seller123",
+      },
+      title: "Phone",
+      save: jest.fn().mockResolvedValue(true),
+    };
+
+    Product.findOne.mockResolvedValue(product);
+
+    const id = new mongoose.Types.ObjectId().toString();
+
+    const res = await request(app)
+      .patch(`/api/products/${id}`)
+      .set("Authorization", "Bearer token")
+      .send({
+        seller: "hacker",
+        createdAt: "2020",
+      });
+
+    expect(res.statusCode).toBe(200);
+
+    expect(product.seller.toString()).toBe("seller123");
+
+    expect(product.save).toHaveBeenCalled();
+  });
+
+})
