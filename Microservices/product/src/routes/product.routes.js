@@ -11,5 +11,12 @@ const upload = multer({ storage: multer.memoryStorage() })
 /* POST /api/products */
 router.post('/', createAuthMiddleware([ 'admin', 'seller' ]), upload.array('images', 5), createProductValidators, productController.createProduct);
 
+/* GET /api/products */
+router.get('/', productController.getProducts);
+
+/* GET /api/products/:id */
+router.get('/:id', productController.getProductById);
+
+router.patch('/:id', createAuthMiddleware([ 'seller' ]), productController.updateProduct)
 
 module.exports = router;
