@@ -11,4 +11,4 @@
 
  router.patch('/items/:productId', validation.validateUpdateCartItem, createAuthMiddleware([ 'user' ]), cartController.updateItemQuantity)
 
- module.exports = router
+ module.exports = router;
