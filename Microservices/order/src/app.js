@@ -1,8 +1,9 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const orderRouter = require('../src/routes/order.routes')
 
 const app = express();
 
 app.use(cookieParser());
-
+app.use('/api/orders', orderRouter)
 module.exports = app;
