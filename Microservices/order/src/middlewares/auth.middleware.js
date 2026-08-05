@@ -1,27 +1,33 @@
-const userModel = require('../models/user.model');
 const jwt = require("jsonwebtoken");
 
-async function authMiddleware(req, res, next) {
-    const token = req.cookies.token;
+function createAuthMiddleware(roles = ["user"]) {
+  return function authMiddleware(req, res, next) {
+    const token =
+      req.cookies?.token || req.headers?.authorization?.split(" ")[1];
 
-    if(!token) {
-        return res.status(401).json({ message: "Unauthorized" });
+    if (!token) {
+      return res.status(401).json({
+        message: "Unauthorized : No token provided",
+      });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("decoded value: ", decoded);
+      if (!roles.includes(decoded.role)) {
+        return res.status(403).json({
+          message: "Forbidden Insufficient permissions",
+        });
+      }
 
-        const user = decoded;
-
-        req.user = user;   //Attach user info to request
-        
-        next();
-        
+      req.user = decoded;
+      next();
     } catch (err) {
-        return res.status(401).json({ message: "Unauthorized"})
+      return res.status(401).json({
+        message: "Unauthorized: Invalid token",
+      });
     }
+  };
 }
 
-module.exports = {
-    authMiddleware
-}
+module.exports = createAuthMiddleware;
