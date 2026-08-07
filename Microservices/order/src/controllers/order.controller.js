@@ -27,6 +27,31 @@ async function createOrder(req, res) {
 
         console.log("Products fetched:", products)
 
+        let priceAmount = 0;
+
+        const orderItems = cartResponse.data.cart.item.map((item, index) => {
+
+            const product = product.find(p => p._id === item.productId)
+
+            //if not in stock, does not allow order creation
+
+            if (!product.inStock || product.inStock < item.quantity) {
+                throw new Error(`Product ${product.name} is out of stock or insufficient stock`)
+            }
+
+            const itemTotal = product.price.amount * item.quatity;
+            priceAmount += itemTotal;
+
+            return {
+                product: item.productId,
+                quantity: item.quantity,
+                price: {
+                    amount: itemTotal,
+                    currency: product.price.currency
+                }
+            }
+        })
+
     } catch (err) {
         console.error("Error fetching cart:", err.message)
         return res.status(500).json({ message: "Internal server error", error: err.message});
