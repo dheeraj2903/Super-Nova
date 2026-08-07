@@ -22,12 +22,12 @@ describe("GET /api/products/seller", () => {
 
     const products = [
       {
-        _id: "1",
+        id: "1",
         title: "iPhone",
         seller: "seller123",
       },
       {
-        _id: "2",
+        id: "2",
         title: "MacBook",
         seller: "seller123",
       },

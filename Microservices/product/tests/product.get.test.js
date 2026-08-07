@@ -13,12 +13,12 @@ describe("GET /api/products", () => {
   test("should return all products", async () => {
     const products = [
       {
-        _id: "1",
+        id: "1",
         title: "iPhone",
         price: { amount: 50000, currency: "INR" },
       },
       {
-        _id: "2",
+        id: "2",
         title: "MacBook",
         price: { amount: 120000, currency: "INR" },
       },

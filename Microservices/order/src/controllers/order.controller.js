@@ -15,13 +15,23 @@ async function createOrder(req, res) {
             }
         })
 
-        console.log("Cart response:", cartResponse.data);
+        // console.log("Cart response:", cartResponse.data.cart.items);
+
+        const products = await Promise.all(cartResponse.data.cart.items.map(async (item) => {
+            return (await axios.get(`http://localhost:3001/api/products/${item.productId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })).data.product
+        }))
+
+        console.log("Products fetched:", products)
 
     } catch (err) {
+        console.error("Error fetching cart:", err.message)
         return res.status(500).json({ message: "Internal server error", error: err.message});
     }
 }
-
 
 module.exports = {
     createOrder

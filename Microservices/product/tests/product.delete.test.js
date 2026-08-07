@@ -40,11 +40,11 @@ describe("DELETE /api/products/:id", () => {
     expect(res.body.message).toBe("Product deleted");
 
     expect(Product.findOne).toHaveBeenCalledWith({
-      _id: id,
+      id: id,
     });
 
     expect(Product.findOneAndDelete).toHaveBeenCalledWith({
-      _id: id,
+      id: id,
     });
   });
 

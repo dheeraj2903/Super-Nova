@@ -29,7 +29,7 @@ describe("POST /api/products", () => {
     });
 
     Product.create.mockResolvedValue({
-      _id: "product123",
+      id: "product123",
       title: "iPhone",
       description: "Latest iPhone",
       seller: "seller123",

@@ -12,7 +12,7 @@ describe("GET /api/products/:id", () => {
 
   test("should return a product by id", async () => {
     const product = {
-      _id: "688c6b8e7e79b0d4d9fd1234",
+      id: "688c6b8e7e79b0d4d9fd1234",
       title: "iPhone 16",
       description: "Apple Phone",
       price: {

@@ -14,7 +14,7 @@ describe("GET /api/cart", () => {
         jest.clearAllMocks();
 
         jwt.verify.mockReturnValue({
-            _id: "user123",
+            id: "user123",
             role: "user"
         });
 
@@ -79,7 +79,7 @@ describe("GET /api/cart", () => {
     test("should return 403 when role is invalid", async () => {
 
         jwt.verify.mockReturnValue({
-            _id: "seller123",
+            id: "seller123",
             role: "seller"
         });
 
