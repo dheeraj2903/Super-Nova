@@ -15,7 +15,7 @@ async function createOrder(req, res) {
             }
         })
 
-        // console.log("Cart response:", cartResponse.data.cart.items);
+        console.log("Cart response:", cartResponse.data.cart.items);
 
         const products = await Promise.all(cartResponse.data.cart.items.map(async (item) => {
             return (await axios.get(`http://localhost:3001/api/products/${item.productId}`, {
@@ -29,14 +29,14 @@ async function createOrder(req, res) {
 
         let priceAmount = 0;
 
-        const orderItems = cartResponse.data.cart.item.map((item, index) => {
+        const orderItems = cartResponse.data.cart.items.map((item, index) => {
 
-            const product = product.find(p => p._id === item.productId)
+            const product = products.find(p => p._id === item.productId)
 
             //if not in stock, does not allow order creation
 
             if (!product.inStock || product.inStock < item.quantity) {
-                throw new Error(`Product ${product.name} is out of stock or insufficient stock`)
+                throw new Error(`Product ${product.title} is out of stock or insufficient stock`)
             }
 
             const itemTotal = product.price.amount * item.quatity;
