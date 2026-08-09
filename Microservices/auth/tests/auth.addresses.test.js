@@ -84,7 +84,7 @@ describe('Address Management APIs', () => {
           street: '123 Main Street',
           city: 'Bhopal',
           state: 'MP',
-          pincode: '462001',
+          zip: '462001',
           country: 'India',
           isDefault: true
         });
@@ -142,7 +142,7 @@ describe('Address Management APIs', () => {
           street: '456 Park Avenue',
           city: 'Indore',
           state: 'MP',
-          pincode: '452001',
+          zip: '452001',
           country: 'India'
         });
 

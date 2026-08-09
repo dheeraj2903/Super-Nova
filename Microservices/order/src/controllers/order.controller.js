@@ -15,7 +15,7 @@ async function createOrder(req, res) {
             }
         })
 
-        console.log("Cart response:", cartResponse.data.cart.items);
+        // console.log("Cart response:", cartResponse.data.cart.items);
 
         const products = await Promise.all(cartResponse.data.cart.items.map(async (item) => {
             return (await axios.get(`http://localhost:3001/api/products/${item.productId}`, {
@@ -25,21 +25,21 @@ async function createOrder(req, res) {
             })).data.product
         }))
 
-        console.log("Products fetched:", products)
+        // console.log("Products fetched:", products)
 
         let priceAmount = 0;
 
         const orderItems = cartResponse.data.cart.items.map((item, index) => {
 
-            const product = products.find(p => p._id === item.productId)
+            const product = products.find(p => p._id.toString() === item.productId.toString())
 
             //if not in stock, does not allow order creation
 
-            if (!product.inStock || product.inStock < item.quantity) {
+            if (product.stock < item.quantity) {
                 throw new Error(`Product ${product.title} is out of stock or insufficient stock`)
             }
 
-            const itemTotal = product.price.amount * item.quatity;
+            const itemTotal = product.price.amount * item.quantity;
             priceAmount += itemTotal;
 
             return {
@@ -51,6 +51,25 @@ async function createOrder(req, res) {
                 }
             }
         })
+
+        const order = await orderModel.create({
+            user: user.id,
+            items: orderItems,
+            status: "PENDING",
+            totalPrice: {
+                amount: priceAmount,
+                currency: "INR" // assuming all product are in USD for simplicity
+            },
+            shippingAddress: {
+                street: req.body.shippingAddress.street,
+                city: req.body.shippingAddress.city,
+                state: req.body.shippingAddress.state,
+                zip: req.body.shippingAddress.zip,
+                country: req.body.shippingAddress.country,
+            }
+        })
+
+        res.status(201).json({ order });
 
     } catch (err) {
         console.error("Error fetching cart:", err.message)

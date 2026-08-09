@@ -6,7 +6,6 @@ const addressSchema = new mongoose.Schema({
     state: String,
     zip: String,
     country: String,
-    isDefault: { type: Boolean, default: false }
 });
 
 const orderSchema = new mongoose.Schema({
@@ -46,7 +45,7 @@ const orderSchema = new mongoose.Schema({
     totalPrice: {
         amount: {
             type: Number,
-            reauired: true
+            required: true
         },
         currency: {
             type: String,
@@ -54,7 +53,10 @@ const orderSchema = new mongoose.Schema({
         }
     },
 
-    shippingAddress: addressSchema,
+    shippingAddress: {
+        type: addressSchema,
+        required: true
+    }
 
 }, { timestamps: true })
 

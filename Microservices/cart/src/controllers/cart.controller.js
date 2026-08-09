@@ -34,6 +34,22 @@ async function addItemToCart (req, res) {
  
      const user = req.user;
  
+     // Check whether product exists
+
+    //  try {
+    //     await axios.get(
+    //         `http://localhost:3001/api/products/${productId}`
+    //     )
+    //  } catch (err) {
+    //     if(err.response?.status === 404) {
+    //         return res.status(404).json({
+    //             message: 'Product not found'
+    //         });
+    //     }
+
+    //     throw err
+    //  }
+
      let cart = await cartModel.findOne({ user: user.id });
  
      if (!cart) {

@@ -148,12 +148,12 @@ async function addUserAddress(req, res) {
 
     const id = req.user.id;
 
-    const { street, city, state, pincode, country, isDefault } = req.body;
+    const { street, city, state, zip, country, isDefault } = req.body;
 
     const user = await userModel.findOneAndUpdate({ _id: id}, {
         $push: {
             addresses: {
-                street, city, state, pincode, country, isDefault 
+                street, city, state, zip, country, isDefault 
             }
         }
     }, { new: true });
