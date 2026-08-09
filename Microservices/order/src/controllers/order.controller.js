@@ -13,7 +13,7 @@ async function createOrder(req, res) {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        })
+        });
 
         // console.log("Cart response:", cartResponse.data.cart.items);
 
@@ -77,6 +77,38 @@ async function createOrder(req, res) {
     }
 }
 
+async function getMyOrders(req, res) {
+    const user = req.user;
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    try {
+        const orders = await orderModel
+            .find({ user: user._id})
+            .skip(skip)
+            .limit(limit)
+            sort({ createdAt: -1 })
+
+        const totalOrders = await orderModel.countDocuments({
+            user: user._id
+        });
+
+        res.status(200).json({
+            orders,
+            meta: {
+                total: totalOrders,
+                page,
+                limit
+            }
+        })
+    } catch (err) {
+        res.status(500).json({ message: 'Interval server error'})
+    }
+}
+
 module.exports = {
-    createOrder
+    createOrder,
+    getMyOrders
 }
