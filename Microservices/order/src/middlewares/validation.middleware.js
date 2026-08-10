@@ -37,4 +37,41 @@ const createOrderValidation = [
     responseWithValidationErrors
 ]
 
-module.exports = { createOrderValidation }
+const updateAddressValidation = [
+  body('shippingAddress.street')
+    .optional()
+    .isString()
+    .withMessage('Street must be a string')
+    .notEmpty()
+    .withMessage('Street cannot be empty'),
+  body('shippingAddress.city')
+    .optional()
+    .isString()
+    .withMessage('City must be a string')
+    .notEmpty()
+    .withMessage('City cannot be empty'),
+  body('shippingAddress.state')
+    .optional()
+    .isString()
+    .withMessage('State must be a string')
+    .notEmpty()
+    .withMessage('State cannot be empty'),
+  body('shippingAddress.pincode')
+    .optional()
+    .isString()
+    .withMessage('Pincode must be a string')
+    .notEmpty()
+    .withMessage('Pincode cannot be empty')
+    .bail()
+    .matches(/^\d{6,}$/)
+    .withMessage('Pincode must be at least 4 digits'),
+  body('shippingAddress.country')
+    .optional()
+    .isString()
+    .withMessage('Country must be a string')
+    .notEmpty()
+    .withMessage('Country cannot be empty'),
+  responseWithValidationErrors
+]
+
+module.exports = { createOrderValidation, updateAddressValidation }

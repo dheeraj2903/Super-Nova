@@ -86,13 +86,13 @@ async function getMyOrders(req, res) {
 
     try {
         const orders = await orderModel
-            .find({ user: user._id})
+            .find({ user: user.id})
             .skip(skip)
             .limit(limit)
-            sort({ createdAt: -1 })
+            .sort({ createdAt: -1 })
 
         const totalOrders = await orderModel.countDocuments({
-            user: user._id
+            user: user.id
         });
 
         res.status(200).json({
@@ -108,7 +108,64 @@ async function getMyOrders(req, res) {
     }
 }
 
+async function getOrderById(req, res) {
+
+    const user = req.user;
+    const orderId = req.params.id;
+
+    try {
+        const order = await orderModel.findById(orderId);
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        if (order.user.toString() !== user.id){
+            return res.status(403).json({ message: 'Forbidden: You do not have access'})
+        }
+
+        res.status(200).json({ order });
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message})
+    }
+}
+
+async function cancelOrderById(req, res) {
+
+    const user = req.user;
+    const orderId = req.params.id;
+
+    try {
+        const order = await orderModel.findById(orderId)
+
+        if (!order) {
+            return res.status(404).json({ message: "Order not found"})
+        }
+
+        if (order.user.toString() !== user.id) {
+            return res.status(403).json({ message: 'Forbidden: You do not have access to this order'})   
+        }
+
+        //only PENDING orders can be cancelled
+        if (order.status !== "PENDING") {
+            return res.status(409).json({ message: 'Order cannot be cancelled at this point'})
+        }
+        order.status = 'CANCELLED';
+        await order.save();
+
+        res.status(200).json({ order });
+    } catch (err) {
+        res.status(500).json({ message: 'Interval server error', error: err.message})
+    }
+}
+
+async function updateOrderAddress(req, res){
+    
+}
+
 module.exports = {
     createOrder,
-    getMyOrders
+    getMyOrders,
+    getOrderById,
+    cancelOrderById
 }
