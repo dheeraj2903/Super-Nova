@@ -12,7 +12,7 @@ router.get("/me", createAuthMiddleware([ "user" ]), orderController.getMyOrders)
 
 router.post('/:id/cancel', createAuthMiddleware([ "user" ]), orderController.cancelOrderById)
 
-router.patch('/orders/:id/address', createAuthMiddleware([ 'user' ]), validation.updateAddressValidation, orderController.updateOrderAddress)
+router.patch('/:id/address', createAuthMiddleware([ 'user' ]), validation.updateAddressValidation, orderController.updateOrderAddress)
 
 router.get('/:id', createAuthMiddleware([ "user", "admin" ]), orderController.getOrderById)
 

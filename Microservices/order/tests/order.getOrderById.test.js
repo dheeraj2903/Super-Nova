@@ -69,7 +69,7 @@ describe("GET /api/orders/:id", () => {
         expect(res.statusCode).toBe(403);
 
         expect(res.body.message).toBe(
-            "Forbidden: You do not have access"
+            "Forbidden: You do not have access to this order"
         );
 
         expect(orderModel.findById).toHaveBeenCalledWith("order123");
@@ -108,7 +108,7 @@ describe("GET /api/orders/:id", () => {
         expect(res.statusCode).toBe(403);
 
         expect(res.body.message).toBe(
-            "Forbidden: You do not have access"
+            "Forbidden: You do not have access to this order"
         );
     });
 
