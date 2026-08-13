@@ -4,7 +4,7 @@ const paymentSchema = new mongoose.Schema(
   {
     order: { type: mongoose.Schema.Types.ObjectId, required: true }, //Mongo Order Id
     paymentId: { type: String },
-    orderId: { type: String, required: true }, //RazerPay generated OrderID
+    razorpayOrderId: { type: String, required: true }, //RazerPay generated OrderID
     signature: { type: String },
     status: {
       type: String,
