@@ -47,7 +47,7 @@ async function getProducts(req, res) {
     const filter = {};
 
     if (q) {
-      filter.$text = { search: q };
+      filter.$text = { $search: q };
     }
 
     if (minprice) {
@@ -71,8 +71,10 @@ async function getProducts(req, res) {
 
     return res.status(200).json({ data: products });
   } catch (err) {
+     console.error("GET PRODUCTS ERROR:", err.message);
     return res.status(500).json({
-      message: "Internal server error",
+      message: "Internal server error111",
+      error: err.message
     });
   }
 }
@@ -89,6 +91,7 @@ async function getProductById(req, res) {
 
     return res.status(200).json({ product: product });
   } catch (err) {
+   
     return res.status(500).json({
       message: "Internal server error",
     });

@@ -3,22 +3,33 @@ const { z } = require('zod');
 const axios = require('axios');
 
 
-const searchProduct = tool(async ({ query, token}) => {
+const searchProduct = tool(async ({ query, token }) => {
+    try {
+        const response = await axios.get(
+            `http://localhost:3001/api/products?q=${query}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
 
-    const response = await axios.get(`http://localhost:3001/api/products?q=${data.query}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+        return JSON.stringify(response.data);
 
-    return JSON.stringify(response.data)
+    } catch (err) {
+        console.log("PRODUCT API ERROR:", err.response?.data);
+        console.log("STATUS:", err.response?.status);
+        console.log("URL:", err.config?.url);
+
+        throw err;
+    }
 }, {
     name: 'searchProduct',
     description: 'Search for products based on query',
-    inputSchema: z.object({
-        query: z.string().description('The search query for products')
+    schema: z.object({
+        query: z.string()
     })
-})
+});
 
 
  const addProductToCart = tool(async ({ productId, qty=1,  token }) => {
@@ -37,7 +48,7 @@ const searchProduct = tool(async ({ query, token}) => {
  }, {
     name: 'addProductToCart',
     description: 'Add a product to the shopping cart',
-    inputSchema: z.object({
+    schema: z.object({
         productId: z.string().describe('The id of the product to add to the cart'),
         qty: z.number().describe('The quantity of the produt to add to the cart').default(1)
     })
