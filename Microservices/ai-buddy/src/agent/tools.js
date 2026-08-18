@@ -17,10 +17,7 @@ const searchProduct = tool(async ({ query, token }) => {
         return JSON.stringify(response.data);
 
     } catch (err) {
-        console.log("PRODUCT API ERROR:", err.response?.data);
-        console.log("STATUS:", err.response?.status);
-        console.log("URL:", err.config?.url);
-
+        
         throw err;
     }
 }, {
