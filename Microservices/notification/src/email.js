@@ -1,4 +1,3 @@
-require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -39,6 +38,4 @@ const sendEmail = async (to, subject, text, html) => {
   }
 };
 
-sendEmail('dheerajverma2903@gmail.com', 'Test Subject', 'This is a test mail', "<b>This is a test mail</b>")
-
-module.exports = sendEmail;
+module.exports = {sendEmail};
