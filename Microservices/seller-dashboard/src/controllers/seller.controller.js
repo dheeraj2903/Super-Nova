@@ -28,14 +28,88 @@ async function getMetrics(req, res) {
                 if (productIds.includes(item.product)) {
                     sales += item.quantity;
                     revenue += item.price.amount * item.quantity;
-                    productSales[ item.product ] = (productSales[
-                        
-                    ])
+                    productSales[ item.product ] = (productSales
+                    [item.product] || 0) + item.quantity
                 }
             })
-        })
+        });
+
+        //Top products by quantity sold
+        const topProducts = Object.entries(productSales)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([productId, qty]) => {
+                const prod = products.find(p => p._id.equals(productId));
+                return prod ? { id: prod._id, title: prod.title, sold: qty } : null;
+            })
+            .filter(Boolean);
+
+
+            return res.json({
+                sales,
+                revenue,
+                topProducts
+            })
+
 
     } catch (error) {
-        
+        console.error('Error fetching metrics:', error)
+        res.status(500).json({
+            message: 'Internal server Error'
+        })
     }
+}
+
+
+async function getOrders (req, res) {
+
+    try {
+        const seller = req.user;
+
+        // Get all products for this seller
+        const products = await productModel.find({ seller: seller});
+        const productIds = products.map(p => p._id);
+
+        // Get all orders containing seller's prodcuts
+        const orders = await orderModel.find({
+            'items.product': { $in: productIds }
+        }).populate('user', 'name email').sort({ createdAt: -1 })
+
+        // Filter order items to only include those from this seller
+        const filteredOrders = orders.map(order => {
+            const filteredItems = order.items.filter(item => productIds.some(id => id.equals(item.product)));
+            return {
+                ...order.toObject(),
+                items: filteredItems
+            };
+        }).filter(order => order.items.length > 0);
+        return res.json(filteredOrders)
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        return res.status(500).json({
+            message: 'Internal Server Error'
+        })
+    }
+}
+
+async function getProducts (req, res) {
+
+    try {
+        const seller = req.user;
+
+        const products = await productModel.find({ seller: seller })
+
+        return res.json(products)
+    } catch (error) {
+        console.error('Error fetching products:', error)
+        return res.status(500).json({
+            message: 'Interval Server Error'
+        })
+    }
+}
+
+module.exports = {
+    getMetrics,
+    getOrders,
+    getProducts
 }
