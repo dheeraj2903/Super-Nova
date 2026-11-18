@@ -1,0 +1,172 @@
+/* ── Section wrapper ── */
+.product-grid-section {
+  margin-top: 56px;
+}
+
+/* ── Filter bar ── */
+.product-grid__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.product-grid__toolbar-title {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+}
+
+.product-grid__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.filter-pill {
+  height: 42px;
+  padding: 0 14px;
+  background: var(--canvas);
+  border: 1px solid var(--stone-border);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--charcoal);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.filter-pill:focus-within,
+.filter-pill:hover {
+  border-color: var(--bronze);
+}
+
+.filter-pill--price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: default;
+}
+
+.filter-pill--price input {
+  width: 56px;
+  border: 0;
+  outline: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--charcoal);
+  font-variant-numeric: tabular-nums;
+  background: transparent;
+  cursor: text;
+}
+.filter-pill--price input::placeholder {
+  color: #9ca3af;
+}
+
+/* ── The 4-column grid ── */
+.product-grid__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 1100px) {
+  .product-grid__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 820px) {
+  .product-grid__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .product-grid__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── Shimmer skeleton ── */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-image {
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  background: var(--warm-sand);
+  overflow: hidden;
+  position: relative;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 999px;
+  background: var(--warm-sand);
+  overflow: hidden;
+  position: relative;
+}
+.skeleton-line--short { width: 55%; }
+.skeleton-line--long  { width: 85%; }
+
+.skeleton-btn {
+  height: 44px;
+  border-radius: 999px;
+  background: var(--warm-sand);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Shimmer sweep */
+.skeleton-image::after,
+.skeleton-line::after,
+.skeleton-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* ── No results state ── */
+.no-results {
+  margin-top: 8px;
+  background: var(--warm-sand-light);
+  border-radius: 24px;
+  padding: 48px 24px;
+  text-align: center;
+}
+.no-results__title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.no-results__sub {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+.no-results__btn {
+  height: 46px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bronze);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+.no-results__btn:hover { background: var(--bronze-hover); }
+.no-results__btn:active { transform: scale(0.97); }
