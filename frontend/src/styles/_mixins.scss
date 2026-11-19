@@ -1,0 +1,143 @@
+@use 'variables' as *;
+
+// ─── Responsive Breakpoints ───────────────────────────────────────────────────
+@mixin sm  { @media (max-width: 640px)  { @content; } }
+@mixin md  { @media (max-width: 768px)  { @content; } }
+@mixin lg  { @media (max-width: 1024px) { @content; } }
+@mixin xl  { @media (max-width: 1280px) { @content; } }
+
+// ─── Flex Utilities ───────────────────────────────────────────────────────────
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+// ─── Typography ───────────────────────────────────────────────────────────────
+@mixin heading($size: 32px, $weight: 700) {
+  font-family: $font-heading;
+  font-size: $size;
+  font-weight: $weight;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: $text-primary;
+}
+
+@mixin body-text($size: 14px, $color: $text-secondary) {
+  font-family: $font-body;
+  font-size: $size;
+  color: $color;
+  line-height: 1.6;
+}
+
+// ─── Line Clamp ───────────────────────────────────────────────────────────────
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ─── Button Base ─────────────────────────────────────────────────────────────
+@mixin btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s $ease-luxury;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+@mixin btn-solid {
+  @include btn-base;
+  background: $text-primary;
+  color: $bg-canvas;
+  border-radius: $radius-pill;
+
+  &:hover {
+    background: #2a2a2a;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+@mixin btn-outline {
+  @include btn-base;
+  background: transparent;
+  color: $text-primary;
+  border: 1.5px solid $border-strong;
+  border-radius: $radius-pill;
+
+  &:hover {
+    background: $text-primary;
+    color: $bg-canvas;
+    transform: translateY(-1px);
+  }
+}
+
+// ─── Shimmer Animation ────────────────────────────────────────────────────────
+@mixin shimmer-base {
+  background: linear-gradient(
+    90deg,
+    $bg-surface 0%,
+    #ECEAE9 50%,
+    $bg-surface 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes gentleReveal {
+  0% {
+    opacity: 0.85;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Reveal Transition ────────────────────────────────────────────────────────
+// All sections are 100% visible by default (opacity: 1; transform: none;).
+// We NEVER set opacity: 0 on unrevealed sections so nothing can ever get stuck invisible.
+// When IntersectionObserver triggers, it adds the global .is-revealed class
+// which plays a smooth, gentle entrance animation.
+@mixin reveal-ready {
+  opacity: 1;
+  transform: none;
+
+  &:global(.is-revealed),
+  &:global(.is-visible) {
+    animation: gentleReveal 0.65s $ease-luxury both;
+  }
+}
+
+// ─── Glass Card ──────────────────────────────────────────────────────────────
+@mixin glass-card {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}

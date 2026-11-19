@@ -1,0 +1,37 @@
+// ─── KartIQ Design Tokens ─────────────────────────────────────────────────────
+
+// Colors
+$bg-canvas:          #FFFFFF;
+$bg-surface:         #F7F7F6;
+$bg-surface-hover:   #EFEFED;
+$text-primary:       #111111;
+$text-secondary:     #6B7280;
+$text-muted:         #9CA3AF;
+$border-subtle:      #E5E7EB;
+$border-strong:      #111111;
+$accent-rating:      #F59E0B;
+$accent-wishlist:    #E11D48;
+
+// Typography
+$font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+$font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+// Border Radius
+$radius-xl:   24px;
+$radius-lg:   20px;
+$radius-md:   12px;
+$radius-sm:   8px;
+$radius-pill: 9999px;
+
+// Easing
+$ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
+$ease-std:    cubic-bezier(0.4, 0, 0.2, 1);
+
+// Shadows
+$shadow-float: 0 16px 36px -8px rgba(17, 17, 17, 0.14), 0 4px 12px -2px rgba(17, 17, 17, 0.06);
+$shadow-card:  0 2px 8px -2px rgba(17, 17, 17, 0.08), 0 1px 3px rgba(17, 17, 17, 0.04);
+$shadow-nav:   0 1px 0 0 $border-subtle;
+
+// Layout
+$max-width:    1280px;
+$nav-height:   64px;

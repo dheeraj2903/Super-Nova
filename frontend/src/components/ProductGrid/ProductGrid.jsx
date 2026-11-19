@@ -1,197 +1,216 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import axios from 'axios';
-import ProductCard from './ProductCard';
-import './ProductGrid.css';
+import { useState, useEffect, useRef } from 'react';
+import { ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { mockProducts } from '../../data/mockProducts';
+import { useRevealOnScroll } from '../../hooks/useStorefront';
+import ProductCard from '../ProductCard/ProductCard';
+import Toast from '../Toast/Toast';
+import styles from './ProductGrid.module.scss';
 
-const SORT_OPTIONS = [
-  { value: 'latest', label: 'Sort by: Latest' },
-  { value: 'low',    label: 'Price: Low to High' },
-  { value: 'high',   label: 'Price: High to Low' },
-];
+const SORT_OPTIONS = ['Featured', 'Price: Low → High', 'Price: High → Low', 'Top Rated'];
 
-const CAT_OPTIONS = [
-  'All Categories',
-  'Electronics',
-  'Audio',
-  'Footwear',
-  'Bags',
-  'Home Decor',
-  'Accessories',
-];
-
-/* ── 8-card shimmer skeleton ── */
-function SkeletonGrid() {
+function SkeletonCard() {
   return (
-    <>
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div className="skeleton-card" key={i} aria-hidden="true">
-          <div className="skeleton-image" />
-          <div className="skeleton-line skeleton-line--short" />
-          <div className="skeleton-line skeleton-line--long" />
-          <div className="skeleton-line skeleton-line--long" />
-          <div className="skeleton-btn" />
+    <div className={styles.skeleton}>
+      <div className={styles.skelImg} />
+      <div className={styles.skelBody}>
+        <div className={styles.skelRow} style={{ width: '55%', height: '12px' }} />
+        <div className={styles.skelRow} style={{ width: '90%', height: '16px' }} />
+        <div className={styles.skelRow} style={{ width: '75%', height: '14px' }} />
+        <div className={styles.skelRow} style={{ width: '40%', height: '20px', marginTop: '6px' }} />
+        <div className={styles.skelActions}>
+          <div className={styles.skelBtn} />
+          <div className={styles.skelBtn} />
         </div>
-      ))}
-    </>
+      </div>
+    </div>
   );
 }
 
-export default function ProductGrid({
-  activeCategory,
-  searchQuery,
-  onAddToCart,
-  onBuddyClick,
-}) {
-  /* ── Local filter/sort state ── */
-  const [localCat, setLocalCat]   = useState('All Categories');
-  const [minPrice, setMinPrice]   = useState('');
-  const [maxPrice, setMaxPrice]   = useState('');
-  const [sort, setSort]           = useState('latest');
+export default function ProductGrid({ activeCategory, searchQuery, onAddToCart, onBuddyClick }) {
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [sort, setSort] = useState('Featured');
+  const [sortOpen, setSortOpen] = useState(false);
+  const [catFilterOpen, setCatFilterOpen] = useState(false);
+  const [priceMin, setPriceMin] = useState('');
+  const [priceMax, setPriceMax] = useState('');
+  const [toast, setToast] = useState(null);
+  const sortRef = useRef(null);
+  const catFilterRef = useRef(null);
+  const sectionRef = useRevealOnScroll(0.05);
 
-  /* ── API data state ── */
-  const [products, setProducts]   = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState(null);
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2800);
+  };
 
-  const debounceTimer = useRef(null);
-
-  /* ── Sync category from CategoryStrip prop ── */
+  // Filter + sort
   useEffect(() => {
-    setLocalCat(activeCategory);
-  }, [activeCategory]);
-
-  /* ── Fetch from /api/products with debounce ── */
-  const fetchProducts = useCallback(() => {
     setLoading(true);
-    setError(null);
+    const timer = setTimeout(() => {
+      let filtered = [...mockProducts];
 
-    const params = {};
-    if (searchQuery)                              params.q         = searchQuery;
-    if (localCat !== 'All Categories')            params.category  = localCat;
-    if (minPrice && !isNaN(Number(minPrice)))     params.minprice  = minPrice;
-    if (maxPrice && !isNaN(Number(maxPrice)))     params.maxprice  = maxPrice;
-    if (sort)                                     params.sort      = sort;
+      if (activeCategory && activeCategory !== 'All Categories') {
+        filtered = filtered.filter((p) => p.category === activeCategory);
+      }
 
-    axios
-      .get('/api/products', { params })
-      .then((res) => {
-        let data = res.data?.data ?? [];
+      if (searchQuery && searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(
+          (p) =>
+            p.title.toLowerCase().includes(q) ||
+            p.category.toLowerCase().includes(q) ||
+            p.description.toLowerCase().includes(q)
+        );
+      }
 
-        /* Client-side sort fallback (backend may not support all sort params) */
-        if (sort === 'low')  data = [...data].sort((a, b) => (a.price?.amount ?? 0) - (b.price?.amount ?? 0));
-        if (sort === 'high') data = [...data].sort((a, b) => (b.price?.amount ?? 0) - (a.price?.amount ?? 0));
+      if (priceMin) filtered = filtered.filter((p) => p.price >= Number(priceMin));
+      if (priceMax) filtered = filtered.filter((p) => p.price <= Number(priceMax));
 
-        setProducts(data);
-      })
-      .catch((err) => {
-        console.error('ProductGrid fetch error:', err);
-        setError('Could not load products. Check your network or backend.');
-      })
-      .finally(() => setLoading(false));
-  }, [searchQuery, localCat, minPrice, maxPrice, sort]);
+      if (sort === 'Price: Low → High') filtered.sort((a, b) => a.price - b.price);
+      else if (sort === 'Price: High → Low') filtered.sort((a, b) => b.price - a.price);
+      else if (sort === 'Top Rated') filtered.sort((a, b) => b.rating - a.rating);
 
-  /* ── Re-fetch whenever deps change (debounced for text inputs) ── */
+      setProducts(filtered);
+      setLoading(false);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [activeCategory, searchQuery, sort, priceMin, priceMax]);
+
+  // Close dropdowns on outside click
   useEffect(() => {
-    clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(fetchProducts, 350);
-    return () => clearTimeout(debounceTimer.current);
-  }, [fetchProducts]);
+    function handleClick(e) {
+      if (sortRef.current && !sortRef.current.contains(e.target)) setSortOpen(false);
+      if (catFilterRef.current && !catFilterRef.current.contains(e.target)) setCatFilterOpen(false);
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
-  const isEmpty = !loading && !error && products.length === 0;
+  const categories = ['All Categories', 'Electronics', 'Audio', 'Footwear', 'Bags', 'Home Decor', 'Accessories'];
 
   return (
-    <section id="shop-grid" className="product-grid-section">
-      {/* ── Toolbar ── */}
-      <div className="product-grid__toolbar">
-        <h2 className="product-grid__toolbar-title">Trending &amp; Hot Deals</h2>
-
-        <div className="product-grid__filters">
-          {/* Category select */}
-          <select
-            className="filter-pill"
-            aria-label="Category"
-            value={localCat}
-            onChange={(e) => setLocalCat(e.target.value)}
-          >
-            {CAT_OPTIONS.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-
-          {/* Min price */}
-          <label className="filter-pill filter-pill--price">
-            ₹ Min
-            <input
-              type="number"
-              inputMode="numeric"
-              aria-label="Minimum price"
-              placeholder="0"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-            />
-          </label>
-
-          {/* Max price */}
-          <label className="filter-pill filter-pill--price">
-            ₹ Max
-            <input
-              type="number"
-              inputMode="numeric"
-              aria-label="Maximum price"
-              placeholder="Any"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
-          </label>
-
-          {/* Sort */}
-          <select
-            className="filter-pill"
-            aria-label="Sort by"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-          >
-            {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* ── Error banner ── */}
-      {error && (
-        <div className="no-results">
-          <div className="no-results__title">⚠ {error}</div>
-          <div className="no-results__sub">The backend may be offline or still starting up.</div>
-          <button className="no-results__btn" onClick={fetchProducts}>Retry</button>
-        </div>
-      )}
-
-      {/* ── Grid ── */}
-      {!error && (
-        <div className="product-grid__grid">
-          {loading ? (
-            <SkeletonGrid />
-          ) : (
-            products.map((p) => (
-              <ProductCard key={p._id} product={p} onAddToCart={onAddToCart} />
-            ))
-          )}
-        </div>
-      )}
-
-      {/* ── Empty state ── */}
-      {isEmpty && (
-        <div className="no-results">
-          <div className="no-results__title">Nothing matches those filters</div>
-          <div className="no-results__sub">
-            Widen your price range, or describe what you need in your own words.
+    <>
+      <section id="shop-grid" className={styles.section} ref={sectionRef}>
+        {/* Header row */}
+        <div className={styles.header}>
+          <div>
+            <h2 className={styles.title}>
+              Trending &amp; Hot Deals
+              <span className={styles.liveDot}>• Live Feed</span>
+            </h2>
+            <p className={styles.subtitle}>
+              Selected archival objects, footwear, and devices available at seasonal valuations
+            </p>
           </div>
-          <button className="no-results__btn" onClick={onBuddyClick}>
-            Ask AI-Buddy to find it
-          </button>
+
+          {/* Filter controls */}
+          <div className={styles.controls}>
+            {/* Category filter */}
+            <div className={styles.filterWrap} ref={catFilterRef}>
+              <button
+                className={styles.filterBtn}
+                onClick={() => setCatFilterOpen((o) => !o)}
+              >
+                {activeCategory || 'All Categories'}
+                <ChevronDown size={13} strokeWidth={2} className={catFilterOpen ? styles.chevronOpen : ''} />
+              </button>
+              {catFilterOpen && (
+                <div className={styles.filterDropdown}>
+                  {categories.map((c) => (
+                    <button
+                      key={c}
+                      className={`${styles.filterItem} ${(activeCategory || 'All Categories') === c ? styles.filterActive : ''}`}
+                      onClick={() => setCatFilterOpen(false)}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Price range */}
+            <div className={styles.priceRange}>
+              <span className={styles.priceLabel}>₹</span>
+              <input
+                type="number"
+                placeholder="Min"
+                className={styles.priceInput}
+                value={priceMin}
+                onChange={(e) => setPriceMin(e.target.value)}
+              />
+              <span className={styles.priceDash}>–</span>
+              <input
+                type="number"
+                placeholder="Max"
+                className={styles.priceInput}
+                value={priceMax}
+                onChange={(e) => setPriceMax(e.target.value)}
+              />
+            </div>
+
+            {/* Sort */}
+            <div className={styles.filterWrap} ref={sortRef}>
+              <button
+                className={styles.filterBtn}
+                onClick={() => setSortOpen((o) => !o)}
+              >
+                Sort: {sort}
+                <ChevronDown size={13} strokeWidth={2} className={sortOpen ? styles.chevronOpen : ''} />
+              </button>
+              {sortOpen && (
+                <div className={styles.filterDropdown}>
+                  {SORT_OPTIONS.map((o) => (
+                    <button
+                      key={o}
+                      className={`${styles.filterItem} ${sort === o ? styles.filterActive : ''}`}
+                      onClick={() => { setSort(o); setSortOpen(false); }}
+                    >
+                      {o}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      )}
-    </section>
+
+        {/* Grid */}
+        <div className={styles.grid}>
+          {loading
+            ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
+            : products.length > 0
+            ? products.map((p, i) => (
+                <div
+                  key={p._id}
+                  className={styles.cardReveal}
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
+                  <ProductCard
+                    product={p}
+                    onAddToCart={onAddToCart}
+                    onShowToast={showToast}
+                  />
+                </div>
+              ))
+            : (
+              <div className={styles.empty}>
+                <p>No products found. Try adjusting your filters.</p>
+                <button
+                  className={styles.aiBtn}
+                  onClick={onBuddyClick}
+                >
+                  ✦ Ask AI-Buddy for suggestions
+                </button>
+              </div>
+            )
+          }
+        </div>
+      </section>
+
+      {toast && <Toast message={toast} />}
+    </>
   );
 }

@@ -1,0 +1,46 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.strip {
+  @include reveal-ready;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  background: $bg-surface;
+  border-radius: $radius-xl;
+  padding: 32px 40px;
+  margin-bottom: 64px;
+
+  @include lg {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.icon {
+  color: $text-primary;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.label {
+  font-family: $font-heading;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $text-primary;
+  margin-bottom: 3px;
+}
+
+.sub {
+  @include body-text(12px, $text-muted);
+}

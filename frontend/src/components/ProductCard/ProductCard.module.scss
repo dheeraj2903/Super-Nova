@@ -1,0 +1,201 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+
+@keyframes popHeart {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.4); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.card {
+  background: $bg-canvas;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s $ease-luxury, transform 0.3s $ease-luxury, border-color 0.3s $ease-luxury;
+
+  &:hover {
+    box-shadow: $shadow-float;
+    transform: translateY(-3px);
+    border-color: transparent;
+  }
+}
+
+// ── Image ─────────────────────────────────────────────────────────────────────
+.imgWrap {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: $bg-surface;
+  flex-shrink: 0;
+}
+
+.img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.4s $ease-luxury, transform 0.5s $ease-luxury;
+}
+
+.imgIn  { opacity: 1; }
+.imgOut { opacity: 0; }
+
+.imgHover {
+  transform-origin: center;
+}
+
+.card:hover .imgWrap img {
+  transform: scale(1.03);
+}
+
+// Discount pill
+.discountPill {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: $text-primary;
+  color: $bg-canvas;
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: $radius-pill;
+  z-index: 2;
+}
+
+// Wishlist
+.wishBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid $border-subtle;
+  border-radius: 50%;
+  @include flex-center;
+  color: $text-secondary;
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.2s, background 0.2s, transform 0.2s $ease-luxury;
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    background: $bg-canvas;
+    color: $accent-wishlist;
+    transform: scale(1.1);
+  }
+
+  &.wishlisted {
+    animation: popHeart 0.4s $ease-luxury forwards;
+    color: $accent-wishlist;
+  }
+}
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+.body {
+  padding: 14px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.meta {
+  @include flex-between;
+}
+
+.catPill {
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: $text-muted;
+  background: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-pill;
+  padding: 3px 10px;
+}
+
+.rating {
+  font-family: $font-body;
+  font-size: 12px;
+  color: $text-secondary;
+}
+
+.star {
+  color: $accent-rating;
+}
+
+.title {
+  font-family: $font-heading;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: $text-primary;
+  line-height: 1.4;
+  @include line-clamp(2);
+}
+
+.desc {
+  @include body-text(12.5px, $text-muted);
+  @include line-clamp(2);
+  line-height: 1.55;
+}
+
+.pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.price {
+  font-family: $font-heading;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: $text-primary;
+}
+
+.mrp {
+  font-family: $font-body;
+  font-size: 13px;
+  color: $text-muted;
+  text-decoration: line-through;
+}
+
+// ── Action buttons ────────────────────────────────────────────────────────────
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cartBtn {
+  @include btn-outline;
+  padding: 9px 10px;
+  font-size: 12.5px;
+  border-radius: $radius-md;
+  gap: 5px;
+}
+
+.buyBtn {
+  @include btn-solid;
+  padding: 9px 10px;
+  font-size: 12.5px;
+  border-radius: $radius-md;
+  gap: 5px;
+}

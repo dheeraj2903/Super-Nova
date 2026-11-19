@@ -3,9 +3,13 @@ import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
 import CategoryStrip from './components/CategoryStrip/CategoryStrip';
 import ProductGrid from './components/ProductGrid/ProductGrid';
+import TrustStrip from './components/TrustStrip/TrustStrip';
+import Footer from './components/Footer/Footer';
 import CartDrawer from './components/CartDrawer/CartDrawer';
 import AIBuddyDrawer from './components/AIBuddyDrawer/AIBuddyDrawer';
+import AIFloatingTrigger from './components/AIFloatingTrigger/AIFloatingTrigger';
 import SVGDefs from './components/SVGDefs';
+import './styles/global.scss';
 
 export default function App() {
   /* ── Global UI state ── */
@@ -33,14 +37,12 @@ export default function App() {
   /* ── Category selection from strip ── */
   const handleCategorySelect = useCallback((cat) => {
     setActiveCategory(cat);
-    // scroll to grid
     const el = document.getElementById('shop-grid');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   return (
     <>
-      {/* Inline SVG symbol defs (used by category & hero illustrations) */}
       <SVGDefs />
 
       <Navbar
@@ -51,7 +53,7 @@ export default function App() {
         onBuddyClick={() => setBuddyOpen(true)}
       />
 
-      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px 32px 96px' }}>
+      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '32px 32px 96px' }}>
         <Hero onBuddyClick={() => setBuddyOpen(true)} />
 
         <CategoryStrip
@@ -65,7 +67,11 @@ export default function App() {
           onAddToCart={addToCart}
           onBuddyClick={() => setBuddyOpen(true)}
         />
+
+        <TrustStrip />
       </main>
+
+      <Footer />
 
       <CartDrawer
         isOpen={cartOpen}
@@ -78,6 +84,9 @@ export default function App() {
         isOpen={buddyOpen}
         onClose={() => setBuddyOpen(false)}
       />
+
+      {/* Floating AI-Buddy trigger */}
+      <AIFloatingTrigger onClick={() => setBuddyOpen(true)} />
     </>
   );
 }

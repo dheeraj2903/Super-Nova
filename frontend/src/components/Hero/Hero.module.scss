@@ -1,0 +1,160 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.hero {
+  @include reveal-ready;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  background: $bg-surface;
+  border-radius: $radius-xl;
+  padding: 48px 52px 48px 56px;
+  margin-bottom: 56px;
+  overflow: hidden;
+
+  @include lg {
+    grid-template-columns: 1fr;
+    padding: 40px 36px;
+  }
+}
+
+// ── Left ──────────────────────────────────────────────────────────────────────
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-secondary;
+  background: $bg-canvas;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-pill;
+  padding: 6px 14px;
+  width: fit-content;
+}
+
+.headline {
+  @include heading(52px, 800);
+  line-height: 1.08;
+
+  @include lg {
+    font-size: 40px;
+  }
+
+  @include sm {
+    font-size: 32px;
+  }
+}
+
+.subtitle {
+  @include body-text(16px, $text-secondary);
+  max-width: 380px;
+  line-height: 1.65;
+}
+
+.ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ctaSolid {
+  @include btn-solid;
+  padding: 13px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: $radius-pill;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.ctaOutline {
+  @include btn-outline;
+  padding: 13px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: $radius-pill;
+  gap: 7px;
+}
+
+// Trust strip
+.trustStrip {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-top: 4px;
+  flex-wrap: wrap;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: $font-body;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $text-muted;
+}
+
+.trustDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+// ── Right ─────────────────────────────────────────────────────────────────────
+.right {
+  position: relative;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+
+  @include lg {
+    display: none;
+  }
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: $radius-lg;
+}
+
+.glassBadge {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @include glass-card;
+  border-radius: $radius-md;
+  padding: 10px 16px;
+  font-family: $font-body;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: $text-primary;
+}
+
+.limitedTag {
+  color: $text-secondary;
+  font-weight: 400;
+}

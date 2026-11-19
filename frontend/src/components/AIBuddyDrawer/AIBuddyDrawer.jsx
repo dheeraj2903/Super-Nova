@@ -1,138 +1,122 @@
-import { useState, useEffect, useRef } from 'react';
-import '../CartDrawer/CartDrawer.css'; /* shared overlay + drawer shell */
-import './AIBuddyDrawer.css';
+import { useState } from 'react';
+import { X, Sparkles, Send, MessageSquare } from 'lucide-react';
+import styles from './AIBuddyDrawer.module.scss';
 
-function SparkIcon({ size = 15 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="#7E6140" aria-hidden="true">
-      <path d="M12 2l2.2 6.3L20 10l-5.8 1.7L12 18l-2.2-6.3L4 10l5.8-1.7z" />
-      <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" />
-    </svg>
-  );
-}
+const QUICK_CHIPS = [
+  'Best deals under ₹5,000',
+  'Compare top headphones',
+  'Track my active order',
+  'Trending in Electronics',
+  'Sustainable picks',
+];
 
-const INITIAL_MSG = {
-  role: 'ai',
-  text: "Hi! Tell me what you're looking for and your budget — I'll find the best options and can add them to your cart.",
+const SAMPLE_RESPONSES = {
+  'Best deals under ₹5,000': 'Here are today\'s top picks under ₹5,000: **StrideLite Knit Sneakers** (₹2,499), **Meridian TWS Earbuds** (₹2,899), **Apex Ceramic Pour-Over** (₹2,199), and **Zenith GaN Charger** (₹1,799). All carry our authenticity guarantee and free express shipping!',
+  'Compare top headphones': 'The **AuraWave ANC Studio** (₹3,499) leads with 40-hr battery & hybrid ANC. The **Meridian TWS** (₹2,899) offers true wireless freedom. For studio reference, the AuraWave wins on soundstage. For daily commute, Meridian\'s compact case is unbeatable.',
+  'Track my active order': 'Please log in to view live order tracking. Once logged in, go to **Account → My Orders & Live Tracking** to see real-time dispatch updates and estimated delivery windows.',
 };
 
-export default function AIBuddyDrawer({ isOpen, onClose }) {
-  const [messages, setMessages] = useState([INITIAL_MSG]);
+export default function AIBuddyDrawer({ isOpen, onClose, prefillQuery }) {
   const [input, setInput] = useState('');
-  const [thinking, setThinking] = useState(false);
-  const bottomRef = useRef(null);
+  const [messages, setMessages] = useState([
+    {
+      role: 'assistant',
+      text: 'Hello! I\'m KartIQ AI-Buddy. I can help you find the best deals, compare products, or answer any shopping questions. What\'re you looking for today?',
+    },
+  ]);
 
-  /* Lock body scroll */
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
-
-  /* Close on Escape */
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  /* Auto-scroll to latest message */
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  async function handleSend() {
-    const text = input.trim();
-    if (!text || thinking) return;
-
-    setInput('');
-    setMessages((prev) => [...prev, { role: 'user', text }]);
-    setThinking(true);
-
-    /* Simulated AI response — wire to your AI-Buddy microservice */
-    await new Promise((r) => setTimeout(r, 1200));
+  const sendMessage = (text) => {
+    if (!text.trim()) return;
+    const userMsg = { role: 'user', text };
+    const reply = SAMPLE_RESPONSES[text] || `Great question! Searching KartIQ's catalog for "${text}"… I'll surface the best matches and pricing insights shortly. Meanwhile, check the **Trending & Hot Deals** section below for curated picks.`;
     setMessages((prev) => [
       ...prev,
-      {
-        role: 'ai',
-        text: `Got it! Searching for "${text}"… I'll surface the best matches from our catalogue shortly. (Connect the AI-Buddy microservice at /api/ai-buddy/chat to make this live.)`,
-      },
+      userMsg,
+      { role: 'assistant', text: reply },
     ]);
-    setThinking(false);
-  }
+    setInput('');
+  };
 
-  function handleKeyDown(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  }
+  const handleChip = (chip) => sendMessage(chip);
+  const handleSend = () => sendMessage(input);
+  const handleKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
 
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className={`drawer-overlay${isOpen ? ' drawer-overlay--open' : ''}`}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Drawer */}
+      {isOpen && (
+        <div className={styles.overlay} onClick={onClose} aria-hidden="true" />
+      )}
       <aside
-        className={`drawer${isOpen ? ' drawer--open' : ''}`}
+        className={`${styles.drawer} ${isOpen ? styles.open : ''}`}
         role="dialog"
         aria-modal="true"
-        aria-label="AI-Buddy assistant"
+        aria-label="AI-Buddy shopping assistant"
       >
-        {/* Header */}
-        <div className="drawer__header">
-          <div className="ai-buddy-header-icon">
-            <SparkIcon />
-            AI-Buddy
+        {/* Head */}
+        <div className={styles.head}>
+          <div className={styles.headLeft}>
+            <div className={styles.avatarWrap}>
+              <span className={styles.avatarIcon}>✦</span>
+              <span className={styles.statusDot} />
+            </div>
+            <div>
+              <h2 className={styles.title}>AI-Buddy</h2>
+              <p className={styles.status}>Online · Instant responses</p>
+            </div>
           </div>
-          <button className="drawer__close" onClick={onClose} aria-label="Close AI-Buddy">✕</button>
+          <button className={styles.closeBtn} onClick={onClose} aria-label="Close AI-Buddy">
+            <X size={18} strokeWidth={2} />
+          </button>
         </div>
 
-        {/* Chat body */}
-        <div className="drawer__body">
-          <div className="ai-buddy-chat">
-            {messages.map((msg, i) =>
-              msg.role === 'ai' ? (
-                <div key={i} className="ai-bubble">{msg.text}</div>
-              ) : (
-                <div key={i} className="user-bubble">{msg.text}</div>
-              )
-            )}
-            {thinking && (
-              <div className="ai-bubble">
-                <span>AI-Buddy is thinking…</span>
+        {/* Messages */}
+        <div className={styles.body}>
+          {messages.map((msg, i) => (
+            <div key={i} className={`${styles.msgRow} ${msg.role === 'user' ? styles.user : styles.assistant}`}>
+              {msg.role === 'assistant' && (
+                <span className={styles.msgAvatar}>✦</span>
+              )}
+              <div className={styles.bubble}>
+                <p
+                  className={styles.msgText}
+                  dangerouslySetInnerHTML={{
+                    __html: msg.text
+                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                      .replace(/\n/g, '<br/>'),
+                  }}
+                />
               </div>
-            )}
-            <div ref={bottomRef} />
-          </div>
+            </div>
+          ))}
         </div>
 
-        {/* Input footer */}
-        <div className="drawer__footer">
-          <div className="ai-buddy-input-row">
-            <textarea
-              className="ai-buddy-textarea"
-              placeholder="Describe what you need and your budget…"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              rows={2}
-              aria-label="Message AI-Buddy"
-            />
-            <button
-              className="ai-buddy-send"
-              onClick={handleSend}
-              disabled={!input.trim() || thinking}
-              aria-label="Send message"
-            >
-              ↑
+        {/* Quick chips */}
+        <div className={styles.chips}>
+          {QUICK_CHIPS.map((chip) => (
+            <button key={chip} className={styles.chip} onClick={() => handleChip(chip)}>
+              {chip}
             </button>
-          </div>
-          <p className="ai-buddy-hint">Press Enter to send · Shift+Enter for new line</p>
+          ))}
+        </div>
+
+        {/* Input */}
+        <div className={styles.inputWrap}>
+          <textarea
+            className={styles.input}
+            placeholder="Ask about products, deals, comparisons…"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKey}
+            rows={1}
+          />
+          <button
+            className={styles.sendBtn}
+            onClick={handleSend}
+            disabled={!input.trim()}
+            aria-label="Send message"
+          >
+            <Send size={15} strokeWidth={2} />
+          </button>
         </div>
       </aside>
     </>

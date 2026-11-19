@@ -1,110 +1,233 @@
 import { useState, useEffect, useRef } from 'react';
-import './Navbar.css';
+import { Search, ShoppingCart, User, ChevronDown, Zap, X } from 'lucide-react';
+import { mockProducts, categories } from '../../data/mockProducts';
+import { useDebounce } from '../../hooks/useStorefront';
+import styles from './Navbar.module.scss';
 
-/* ── Spark icon (inline, matches SVG symbol) ── */
-function SparkIcon({ size = 14, color = '#7E6140' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden="true">
-      <path d="M12 2l2.2 6.3L20 10l-5.8 1.7L12 18l-2.2-6.3L4 10l5.8-1.7z" />
-      <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" />
-    </svg>
-  );
-}
+export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch, searchQuery }) {
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [localQuery, setLocalQuery] = useState('');
+  const [catOpen, setCatOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const debouncedQuery = useDebounce(localQuery, 280);
+  const searchRef = useRef(null);
+  const catRef = useRef(null);
+  const accountRef = useRef(null);
 
-export default function Navbar({
-  searchQuery,
-  onSearch,
-  cartCount,
-  onCartClick,
-  onBuddyClick,
-}) {
-  const [scrolled, setScrolled] = useState(false);
-  const [prevCount, setPrevCount] = useState(cartCount);
-  const [badgeBounce, setBadgeBounce] = useState(false);
-  const bounceTimer = useRef(null);
-
-  /* ── Glassmorphic blur on scroll ── */
+  // Sync debounced query upward
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    onSearch(debouncedQuery);
+  }, [debouncedQuery, onSearch]);
+
+  // Close on outside click
+  useEffect(() => {
+    function handleClick(e) {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchFocused(false);
+      }
+      if (catRef.current && !catRef.current.contains(e.target)) {
+        setCatOpen(false);
+      }
+      if (accountRef.current && !accountRef.current.contains(e.target)) {
+        setAccountOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  /* ── Cart badge bounce when count increases ── */
+  // Escape key
   useEffect(() => {
-    if (cartCount > prevCount) {
-      setBadgeBounce(true);
-      clearTimeout(bounceTimer.current);
-      bounceTimer.current = setTimeout(() => setBadgeBounce(false), 500);
+    function handleKey(e) {
+      if (e.key === 'Escape') {
+        setSearchFocused(false);
+        setCatOpen(false);
+        setAccountOpen(false);
+      }
     }
-    setPrevCount(cartCount);
-    return () => clearTimeout(bounceTimer.current);
-  }, [cartCount]); // eslint-disable-line react-hooks/exhaustive-deps
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, []);
+
+  const filteredProducts = debouncedQuery.trim()
+    ? mockProducts.filter(
+        (p) =>
+          p.title.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+          p.category.toLowerCase().includes(debouncedQuery.toLowerCase())
+      ).slice(0, 5)
+    : [];
+
+  const trendingPills = ['Headphones', 'Running Shoes', 'GaN Charger', 'Smart Watch', 'Leather Bag'];
+
+  const scrollToDeals = () => {
+    const el = document.getElementById('shop-grid');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
-    <header className={`navbar${scrolled ? ' navbar--scrolled' : ''}`}>
-      <div className="navbar__inner">
-        {/* Wordmark */}
-        <a href="#top" className="navbar__wordmark">
-          Kart<span>IQ</span>
-        </a>
+    <>
+      {/* Backdrop when search is focused */}
+      {searchFocused && (
+        <div
+          className={styles.backdrop}
+          onClick={() => setSearchFocused(false)}
+        />
+      )}
 
-        {/* Search pill */}
-        <div className="navbar__search">
-          <svg
-            className="navbar__search-icon"
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#6B7280"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            aria-hidden="true"
+      <header className={styles.navbar}>
+        <div className={styles.inner}>
+          {/* ── Left: Wordmark + Categories ── */}
+          <div className={styles.left}>
+            <a href="/" className={styles.wordmark}>
+              KartIQ<span className={styles.dot}>•</span>
+            </a>
+
+            <div className={styles.catWrapper} ref={catRef}>
+              <button
+                className={styles.catBtn}
+                onClick={() => setCatOpen((o) => !o)}
+                aria-expanded={catOpen}
+              >
+                Categories
+                <ChevronDown size={14} strokeWidth={2} className={catOpen ? styles.chevronOpen : ''} />
+              </button>
+
+              {catOpen && (
+                <div className={styles.catDropdown}>
+                  {categories.map((c) => (
+                    <button
+                      key={c.id}
+                      className={styles.catItem}
+                      onClick={() => {
+                        setCatOpen(false);
+                        const el = document.getElementById('shop-grid');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      <img src={c.image} alt={c.name} className={styles.catItemImg} />
+                      <span>{c.name}</span>
+                      <span className={styles.catCount}>{c.count}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ── Center: Search ── */}
+          <div
+            className={`${styles.searchWrap} ${searchFocused ? styles.searchFocused : ''}`}
+            ref={searchRef}
           >
-            <circle cx="11" cy="11" r="7" />
-            <path d="M20 20l-3.5-3.5" />
-          </svg>
+            <Search size={15} strokeWidth={2} className={styles.searchIcon} />
+            <input
+              type="text"
+              placeholder="Search products, brands & categories..."
+              className={styles.searchInput}
+              value={localQuery}
+              onChange={(e) => setLocalQuery(e.target.value)}
+              onFocus={() => setSearchFocused(true)}
+              aria-label="Search"
+            />
+            {localQuery && (
+              <button
+                className={styles.clearBtn}
+                onClick={() => { setLocalQuery(''); onSearch(''); }}
+              >
+                <X size={13} strokeWidth={2} />
+              </button>
+            )}
 
-          <input
-            className="navbar__search-input"
-            type="search"
-            aria-label="Search products"
-            placeholder="Search products, brands and categories"
-            value={searchQuery}
-            onChange={(e) => onSearch(e.target.value)}
-          />
+            {/* Search dropdown */}
+            {searchFocused && (
+              <div className={styles.searchDropdown}>
+                {!debouncedQuery.trim() ? (
+                  <>
+                    <p className={styles.dropLabel}>Popular Categories</p>
+                    <div className={styles.catGrid}>
+                      {categories.map((c) => (
+                        <button key={c.id} className={styles.catGridItem}>
+                          <img src={c.image} alt={c.name} />
+                          <span>{c.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className={styles.dropLabel} style={{ marginTop: '16px' }}>Trending</p>
+                    <div className={styles.trendingPills}>
+                      {trendingPills.map((p) => (
+                        <button
+                          key={p}
+                          className={styles.trendPill}
+                          onClick={() => { setLocalQuery(p); setSearchFocused(false); }}
+                        >
+                          {p}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {filteredProducts.length > 0 ? (
+                      <>
+                        <p className={styles.dropLabel}>Products</p>
+                        {filteredProducts.map((p) => (
+                          <div key={p._id} className={styles.miniCard}>
+                            <img src={p.image} alt={p.title} className={styles.miniImg} />
+                            <div className={styles.miniInfo}>
+                              <span className={styles.miniTitle}>{p.title}</span>
+                              <span className={styles.miniMeta}>
+                                <span style={{ color: '#F59E0B' }}>★</span> {p.rating} &nbsp;·&nbsp; ₹{p.price.toLocaleString('en-IN')}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      <p className={styles.noResults}>No products matched "{debouncedQuery}"</p>
+                    )}
+                    <button
+                      className={styles.aiBuddyBtn}
+                      onClick={() => { setSearchFocused(false); onBuddyClick(); }}
+                    >
+                      ✦ Ask AI-Buddy about "{debouncedQuery}"
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
 
-          <button
-            className="navbar__ai-pill"
-            onClick={onBuddyClick}
-            aria-label="Ask AI-Buddy"
-          >
-            <SparkIcon />
-            <span>Ask AI-Buddy</span>
-          </button>
+          {/* ── Right: Nav actions ── */}
+          <nav className={styles.right}>
+            <button className={styles.navLink} onClick={scrollToDeals}>Deals</button>
+
+            {/* Account dropdown */}
+            <div className={styles.accountWrap} ref={accountRef}>
+              <button
+                className={styles.navLink}
+                onClick={() => setAccountOpen((o) => !o)}
+              >
+                <User size={15} strokeWidth={2} />
+                Account
+                <ChevronDown size={13} strokeWidth={2} className={accountOpen ? styles.chevronOpen : ''} />
+              </button>
+              {accountOpen && (
+                <div className={styles.accountDropdown}>
+                  {['My Orders & Live Tracking', 'Wishlist', 'Partner Dashboard', 'Login / Logout'].map((item) => (
+                    <button key={item} className={styles.accountItem}>{item}</button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <button className={styles.cartBtn} onClick={onCartClick}>
+              <ShoppingCart size={15} strokeWidth={2} />
+              Cart
+              {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
+            </button>
+          </nav>
         </div>
-
-        {/* Right nav */}
-        <nav className="navbar__nav">
-          <a className="navbar__link" href="#shop-grid">
-            Deals
-          </a>
-          <a className="navbar__link" href="#top">
-            Account
-          </a>
-          <button className="navbar__cart" onClick={onCartClick} aria-label="Open cart">
-            Cart&nbsp;(
-            <span
-              className={`navbar__cart-badge${badgeBounce ? ' bounce' : ''}`}
-              key={cartCount}
-            >
-              {cartCount}
-            </span>
-            )
-          </button>
-        </nav>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }

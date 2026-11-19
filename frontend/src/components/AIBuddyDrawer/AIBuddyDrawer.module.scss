@@ -1,0 +1,266 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.35);
+  backdrop-filter: blur(4px);
+  z-index: 44;
+  animation: fadeIn 0.25s $ease-luxury;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: 100vw;
+  background: $bg-canvas;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.38s $ease-luxury;
+  box-shadow: -20px 0 60px rgba(17, 17, 17, 0.12);
+
+  &.open {
+    transform: translateX(0);
+  }
+
+  @include sm {
+    width: 100vw;
+  }
+}
+
+// Head
+.head {
+  @include flex-between;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid $border-subtle;
+  flex-shrink: 0;
+  background: $text-primary;
+}
+
+.headLeft {
+  @include flex-start;
+  gap: 12px;
+}
+
+.avatarWrap {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  @include flex-center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+}
+
+.avatarIcon {
+  font-size: 18px;
+  color: $bg-canvas;
+}
+
+.statusDot {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid $text-primary;
+}
+
+.title {
+  font-family: $font-heading;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: $bg-canvas;
+  margin-bottom: 2px;
+}
+
+.status {
+  font-family: $font-body;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.closeBtn {
+  width: 34px;
+  height: 34px;
+  @include flex-center;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: $bg-canvas;
+  }
+}
+
+// Body (messages)
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: $border-subtle; border-radius: 4px; }
+}
+
+.msgRow {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+
+  &.user {
+    flex-direction: row-reverse;
+  }
+}
+
+.msgAvatar {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  @include flex-center;
+  background: $text-primary;
+  border-radius: 50%;
+  font-size: 12px;
+  color: $bg-canvas;
+}
+
+.bubble {
+  max-width: 80%;
+
+  .user & {
+    background: $text-primary;
+    border-radius: $radius-lg $radius-lg 4px $radius-lg;
+    padding: 11px 15px;
+  }
+
+  .assistant & {
+    background: $bg-surface;
+    border-radius: $radius-lg $radius-lg $radius-lg 4px;
+    padding: 11px 15px;
+  }
+}
+
+.msgText {
+  font-family: $font-body;
+  font-size: 13.5px;
+  line-height: 1.6;
+
+  .user & {
+    color: $bg-canvas;
+  }
+
+  .assistant & {
+    color: $text-primary;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+// Quick chips
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 12px 20px;
+  border-top: 1px solid $border-subtle;
+  flex-shrink: 0;
+}
+
+.chip {
+  font-family: $font-body;
+  font-size: 12px;
+  font-weight: 500;
+  color: $text-secondary;
+  background: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-pill;
+  padding: 6px 13px;
+  cursor: pointer;
+  transition: all 0.15s $ease-std;
+  white-space: nowrap;
+
+  &:hover {
+    background: $text-primary;
+    color: $bg-canvas;
+    border-color: $text-primary;
+  }
+}
+
+// Input row
+.inputWrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 14px 20px 24px;
+  border-top: 1px solid $border-subtle;
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  font-family: $font-body;
+  font-size: 13.5px;
+  color: $text-primary;
+  background: $bg-surface;
+  border: 1.5px solid $border-subtle;
+  border-radius: $radius-md;
+  padding: 11px 14px;
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+  transition: border-color 0.2s $ease-luxury;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    border-color: $border-strong;
+  }
+}
+
+.sendBtn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  @include flex-center;
+  background: $text-primary;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  color: $bg-canvas;
+  transition: opacity 0.15s, transform 0.15s;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    transform: scale(1.06);
+  }
+}

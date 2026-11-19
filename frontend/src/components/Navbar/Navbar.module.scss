@@ -1,0 +1,491 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// ── Backdrop ──────────────────────────────────────────────────────────────────
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  background: rgba(17, 17, 17, 0.25);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s $ease-luxury;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// ── Navbar Shell ──────────────────────────────────────────────────────────────
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid $border-subtle;
+}
+
+.inner {
+  max-width: $max-width;
+  margin: 0 auto;
+  height: $nav-height;
+  padding: 0 32px;
+  @include flex-between;
+  gap: 20px;
+}
+
+// ── Left ──────────────────────────────────────────────────────────────────────
+.left {
+  @include flex-start;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.wordmark {
+  font-family: $font-heading;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: $text-primary;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.dot {
+  color: $text-muted;
+}
+
+// Categories trigger
+.catWrapper {
+  position: relative;
+}
+
+.catBtn {
+  @include flex-start;
+  gap: 5px;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: $text-secondary;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 4px;
+  border-radius: $radius-sm;
+  transition: color 0.18s $ease-std;
+
+  &:hover {
+    color: $text-primary;
+  }
+
+  svg {
+    transition: transform 0.22s $ease-luxury;
+  }
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.catDropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 220px;
+  background: $bg-canvas;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-float;
+  padding: 8px;
+  z-index: 50;
+  animation: dropIn 0.22s $ease-luxury;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.catItem {
+  @include flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  background: none;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: $text-primary;
+  transition: background 0.15s $ease-std;
+
+  &:hover {
+    background: $bg-surface;
+  }
+}
+
+.catItemImg {
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-sm;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.catCount {
+  margin-left: auto;
+  font-size: 12px;
+  color: $text-muted;
+  font-weight: 400;
+}
+
+// ── Search ────────────────────────────────────────────────────────────────────
+.searchWrap {
+  position: relative;
+  flex: 1;
+  max-width: 520px;
+  z-index: 41;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $text-muted;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.searchInput {
+  width: 100%;
+  height: 40px;
+  background: $bg-surface;
+  border: 1.5px solid transparent;
+  border-radius: $radius-pill;
+  padding: 0 36px 0 38px;
+  font-family: $font-body;
+  font-size: 13.5px;
+  color: $text-primary;
+  outline: none;
+  transition: border-color 0.22s $ease-luxury, box-shadow 0.22s $ease-luxury;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.searchFocused {
+  .searchInput {
+    border-color: $border-strong;
+    box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.07);
+    background: $bg-canvas;
+  }
+
+  .searchIcon {
+    color: $text-primary;
+  }
+}
+
+.clearBtn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: $bg-surface-hover;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  @include flex-center;
+  color: $text-secondary;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $border-subtle;
+  }
+}
+
+// ── Search Dropdown ───────────────────────────────────────────────────────────
+.searchDropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background: $bg-canvas;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-float;
+  padding: 20px;
+  z-index: 50;
+  animation: dropIn 0.22s $ease-luxury;
+}
+
+.dropLabel {
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-muted;
+  margin-bottom: 10px;
+}
+
+.catGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.catGridItem {
+  @include flex-start;
+  flex-direction: column;
+  gap: 6px;
+  background: $bg-surface;
+  border: none;
+  border-radius: $radius-md;
+  padding: 10px;
+  cursor: pointer;
+  font-family: $font-body;
+  font-size: 12px;
+  font-weight: 500;
+  color: $text-primary;
+  transition: background 0.15s;
+
+  img {
+    width: 100%;
+    height: 54px;
+    object-fit: cover;
+    border-radius: $radius-sm;
+  }
+
+  &:hover {
+    background: $bg-surface-hover;
+  }
+}
+
+.trendingPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.trendPill {
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: $text-secondary;
+  background: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-pill;
+  padding: 5px 13px;
+  cursor: pointer;
+  transition: all 0.15s $ease-std;
+
+  &:hover {
+    background: $text-primary;
+    color: $bg-canvas;
+    border-color: $text-primary;
+  }
+}
+
+// Mini product cards in search results
+.miniCard {
+  @include flex-start;
+  gap: 12px;
+  padding: 8px;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $bg-surface;
+  }
+}
+
+.miniImg {
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-sm;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.miniInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.miniTitle {
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-primary;
+  @include line-clamp(1);
+}
+
+.miniMeta {
+  font-size: 12px;
+  color: $text-secondary;
+  font-family: $font-body;
+}
+
+.noResults {
+  font-family: $font-body;
+  font-size: 13px;
+  color: $text-muted;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.aiBuddyBtn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 11px;
+  background: $text-primary;
+  color: $bg-canvas;
+  border: none;
+  border-radius: $radius-md;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s $ease-std;
+
+  &:hover {
+    background: #2a2a2a;
+  }
+}
+
+// ── Right Nav ─────────────────────────────────────────────────────────────────
+.right {
+  @include flex-start;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.navLink {
+  @include flex-start;
+  gap: 5px;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: $text-secondary;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: $radius-pill;
+  transition: color 0.15s $ease-std, background 0.15s;
+
+  &:hover {
+    color: $text-primary;
+    background: $bg-surface;
+  }
+}
+
+.accountWrap {
+  position: relative;
+}
+
+.accountDropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 200px;
+  background: $bg-canvas;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-float;
+  padding: 6px;
+  z-index: 50;
+  animation: dropIn 0.22s $ease-luxury;
+}
+
+.accountItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  background: none;
+  border: none;
+  border-radius: $radius-md;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: $text-primary;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $bg-surface;
+  }
+}
+
+.cartBtn {
+  @include flex-start;
+  gap: 6px;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: $text-primary;
+  background: none;
+  border: 1.5px solid $border-strong;
+  border-radius: $radius-pill;
+  padding: 6px 14px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s $ease-luxury;
+
+  &:hover {
+    background: $text-primary;
+    color: $bg-canvas;
+  }
+}
+
+.cartBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  background: $text-primary;
+  color: $bg-canvas;
+  border-radius: $radius-pill;
+  font-size: 10px;
+  font-weight: 700;
+  @include flex-center;
+  padding: 0 4px;
+  border: 2px solid $bg-canvas;
+  font-family: $font-body;
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@include md {
+  .inner {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .left {
+    gap: 10px;
+  }
+
+  .catBtn {
+    display: none;
+  }
+
+  .searchWrap {
+    max-width: 280px;
+  }
+
+  .navLink:not(.cartBtn) {
+    display: none;
+  }
+}
