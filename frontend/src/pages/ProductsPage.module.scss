@@ -2,10 +2,11 @@
 @use '../styles/mixins' as *;
 
 .page {
-  max-width: $max-width;
-  width: 94%;
+  width: 100%;
+  max-width: 1360px;
   margin: 0 auto;
-  padding: 24px 0 64px;
+  box-sizing: border-box;
+  padding: 24px 16px 64px;
 }
 
 // ── Breadcrumb ────────────────────────────────────────────────────────────────
@@ -16,7 +17,7 @@
   font-family: $font-body;
   font-size: 13px;
   color: $text-muted;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 
   a {
     color: $text-secondary;
@@ -47,9 +48,9 @@
   justify-content: space-between;
   gap: 20px;
   flex-wrap: wrap;
-  padding-bottom: 20px;
+  padding: 16px 0 14px;
   border-bottom: 1px solid #E6E1D6;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .titleArea {
@@ -63,7 +64,7 @@
   font-family: $font-heading;
   font-size: 28px;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: $text-primary;
   margin: 0;
   line-height: 1.15;
@@ -73,6 +74,7 @@
   font-family: $font-body;
   font-size: 13px;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
   color: #57534E;
   background: #F2EFE9;
   border: 1px solid #E6E1D6;
@@ -275,6 +277,10 @@
   display: flex;
   gap: 32px;
   align-items: flex-start;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 // ── Left Sticky Sidebar ───────────────────────────────────────────────────────
@@ -282,24 +288,17 @@
   width: 260px;
   flex-shrink: 0;
   position: sticky;
-  top: 90px;
-  background: #F2EFE9;
+  top: 84px;
+  height: fit-content;
+  align-self: start;
+  background: #FFFFFF;
   border: 1px solid #E6E1D6;
   border-radius: 16px;
-  padding: 24px;
+  box-shadow: 0 4px 20px -2px rgba(24, 24, 27, 0.05);
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  max-height: calc(100vh - 110px);
-  overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #E6E1D6;
-    border-radius: 4px;
-  }
+  gap: 12px;
 
   @media (max-width: 900px) {
     display: none; // Hidden on mobile; rendered inside mobile drawer
@@ -309,12 +308,12 @@
 .filterSection {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .sectionTitle {
   font-family: $font-heading;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: -0.01em;
   color: $text-primary;
@@ -325,7 +324,7 @@
 .categoryList {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -336,12 +335,12 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 8px 12px;
-  border-radius: 999px;
+  padding: 6px 10px;
+  border-radius: 6px;
   border: 1px solid transparent;
   background: transparent;
   font-family: $font-body;
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 500;
   color: #57534E;
   cursor: pointer;
@@ -349,7 +348,7 @@
   transition: all 0.18s $ease-luxury;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(24, 24, 27, 0.04);
     color: $text-primary;
   }
 
@@ -357,6 +356,7 @@
     background: #18181B;
     color: #FFFFFF;
     font-weight: 600;
+    border-radius: 6px;
 
     .catCount {
       color: rgba(255, 255, 255, 0.7);
@@ -365,7 +365,7 @@
 }
 
 .catCount {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #78716C;
   font-weight: 400;
 }
@@ -374,7 +374,7 @@
 .priceInputs {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .priceField {
@@ -386,22 +386,22 @@
 
 .currencyPrefix {
   position: absolute;
-  left: 10px;
+  left: 8px;
   font-family: $font-body;
-  font-size: 12.5px;
+  font-size: 12px;
   color: #78716C;
   pointer-events: none;
 }
 
 .priceInput {
   width: 100%;
-  height: 38px;
-  padding: 0 8px 0 24px;
+  height: 32px;
+  padding: 0 6px 0 20px;
   background: #FFFFFF;
   border: 1px solid #E6E1D6;
-  border-radius: 8px;
+  border-radius: 6px;
   font-family: $font-body;
-  font-size: 13px;
+  font-size: 12px;
   color: $text-primary;
   outline: none;
   transition: border-color 0.15s;
@@ -417,22 +417,22 @@
 
 .priceSep {
   color: #A8A29E;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .applyPriceBtn {
-  height: 36px;
-  padding: 0 14px;
+  width: 100%;
+  height: 32px;
+  padding: 0 12px;
   background: #FFFFFF;
   border: 1px solid #D4CEBF;
-  border-radius: 8px;
+  border-radius: 6px;
   font-family: $font-body;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   color: $text-primary;
   cursor: pointer;
   transition: all 0.2s;
-  align-self: flex-start;
 
   &:hover {
     background: #18181B;
@@ -445,15 +445,15 @@
 .ratingList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .ratingOption {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   font-family: $font-body;
-  font-size: 13px;
+  font-size: 12px;
   color: $text-secondary;
   cursor: pointer;
   user-select: none;
@@ -471,21 +471,20 @@
 // Reset button
 .resetBtn {
   width: 100%;
-  height: 40px;
-  background: transparent;
-  border: 1px dashed #D4CEBF;
-  border-radius: 8px;
+  height: 34px;
+  background: #FAF8F5;
+  color: #18181B;
+  border: 1px solid #E6E1D6;
+  border-radius: 6px;
   font-family: $font-body;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: #78716C;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s $ease-luxury;
 
   &:hover {
     border-color: #C46210;
     color: #C46210;
-    background: rgba(196, 98, 16, 0.05);
   }
 }
 
@@ -597,9 +596,17 @@
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   align-items: stretch;
+
+  @media (max-width: 1120px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 // Empty state
@@ -640,19 +647,61 @@
 .emptyResetBtn {
   height: 40px;
   padding: 0 22px;
-  background: #C46210;
-  color: #FFFFFF;
-  border: none;
+  background: #FAF8F5;
+  color: #18181B;
+  border: 1px solid #E6E1D6;
   border-radius: $radius-pill;
   font-family: $font-body;
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s $ease-luxury;
 
   &:hover {
-    background: #A8500A;
+    border-color: #C46210;
+    color: #C46210;
   }
+}
+
+// ── Skeleton Shimmer (220ms filter transition) ────────────────────────────────
+.skeleton {
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.skelImg {
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  @include shimmer-base;
+}
+
+.skelBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skelRow {
+  border-radius: $radius-sm;
+  @include shimmer-base;
+}
+
+.skelActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.skelBtn {
+  height: 36px;
+  border-radius: $radius-pill;
+  @include shimmer-base;
 }
 
 // ── Pagination ────────────────────────────────────────────────────────────────
@@ -698,6 +747,7 @@
   font-family: $font-body;
   font-size: 13px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
   color: $text-primary;
   display: flex;
   align-items: center;

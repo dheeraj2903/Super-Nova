@@ -16,6 +16,35 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+// ── Editorial Display Typography ─────────────────────────────────────────────
+h1, h2, .h1, .h2 {
+  letter-spacing: -0.025em;
+}
+
+// ── Razor-Sharp Tabular Numerals ─────────────────────────────────────────────
+.tabular-nums,
+[class*="price"],
+[class*="Price"],
+[class*="mrp"],
+[class*="MRP"],
+[class*="discount"],
+[class*="Discount"],
+[class*="rating"],
+[class*="Rating"],
+[class*="counter"],
+[class*="count"],
+[class*="Count"],
+[class*="badge"],
+[class*="Badge"],
+[class*="floatingPill"],
+[class*="progressPill"],
+[class*="pageNum"],
+[class*="trustItem"],
+[class*="recPrice"],
+[class*="recDiscount"] {
+  font-variant-numeric: tabular-nums;
+}
+
 body {
   font-family: $font-body;
   color: $text-primary;
@@ -65,4 +94,37 @@ a:focus-visible {
 @keyframes shimmer {
   from { background-position: -200% 0; }
   to   { background-position:  200% 0; }
+}
+
+// ── Subtle Section Scroll-Reveal Transition ──────────────────────────────────
+// Below-the-fold sections: CategoryStrip, FeaturedProducts/ProductGrid, TrustStrip, Footer
+@keyframes sectionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }

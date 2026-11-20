@@ -1,3 +1,4 @@
+import BrandLogo from '../BrandLogo';
 import styles from './Footer.module.scss';
 
 const LINKS = {
@@ -13,9 +14,7 @@ export default function Footer() {
       <div className={`${styles.inner} container`}>
         <div className={styles.top}>
           <div className={styles.brand}>
-            <a href="/" className={styles.wordmark}>
-              SUPERNOVA<span className={styles.dot}>.</span>
-            </a>
+            <BrandLogo />
             <p className={styles.tagline}>
               Quietly confident, refined lifestyle commerce designed for purposeful living and effortless catalog curation.
             </p>

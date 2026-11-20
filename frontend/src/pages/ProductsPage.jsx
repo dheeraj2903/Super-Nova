@@ -7,6 +7,7 @@ import {
   PackageSearch,
 } from 'lucide-react';
 import { mockProducts, categories as rawCategories } from '../data/mockProducts';
+import { GLOBAL_SKELETON_MS } from '../constants/ui';
 import ProductCard from '../components/ProductCard/ProductCard';
 import Toast from '../components/Toast/Toast';
 import styles from './ProductsPage.module.scss';
@@ -74,8 +75,32 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [toast, setToast] = useState(null);
+  const [filterLoading, setFilterLoading] = useState(true);
 
   const sortRef = useRef(null);
+  const filterTimerRef = useRef(null);
+
+  // Exact 450ms skeleton shimmer on initial mount / refresh
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilterLoading(false);
+    }, GLOBAL_SKELETON_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const triggerFilterShimmer = () => {
+    setFilterLoading(true);
+    if (filterTimerRef.current) clearTimeout(filterTimerRef.current);
+    filterTimerRef.current = setTimeout(() => {
+      setFilterLoading(false);
+    }, GLOBAL_SKELETON_MS);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (filterTimerRef.current) clearTimeout(filterTimerRef.current);
+    };
+  }, []);
 
   const showToast = (msg) => {
     setToast(msg);
@@ -85,6 +110,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
   // Sync category state when URL changes (popstate)
   useEffect(() => {
     const handlePopState = () => {
+      triggerFilterShimmer();
       setSelectedCategory(getInitialCategory());
     };
     window.addEventListener('popstate', handlePopState);
@@ -93,6 +119,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
 
   // Update URL search params when category changes
   const handleSelectCategory = (catName) => {
+    triggerFilterShimmer();
     setSelectedCategory(catName);
     setCurrentPage(1);
 
@@ -134,6 +161,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
   // Apply Price Filter
   const handleApplyPrice = (e) => {
     e?.preventDefault();
+    triggerFilterShimmer();
     setAppliedMinPrice(minPriceInput);
     setAppliedMaxPrice(maxPriceInput);
     setCurrentPage(1);
@@ -141,6 +169,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
 
   // Clear Price Filter
   const handleClearPrice = () => {
+    triggerFilterShimmer();
     setMinPriceInput('');
     setMaxPriceInput('');
     setAppliedMinPrice('');
@@ -150,6 +179,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
 
   // Reset All Filters
   const handleResetAll = () => {
+    triggerFilterShimmer();
     handleSelectCategory('All Categories');
     setMinPriceInput('');
     setMaxPriceInput('');
@@ -330,6 +360,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
                 name="ratingFilter"
                 checked={minRating === opt.val}
                 onChange={() => {
+                  triggerFilterShimmer();
                   setMinRating(opt.val);
                   setCurrentPage(1);
                 }}
@@ -369,7 +400,9 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
       {/* Header Row */}
       <div className={styles.headerRow}>
         <div className={styles.titleArea}>
-          <h1 className={styles.title}>All Products</h1>
+          <h1 className={styles.title}>
+            {selectedCategory !== 'All Categories' ? selectedCategory : 'All Products'}
+          </h1>
           <span className={styles.countBadge}>
             {filteredProducts.length}{' '}
             {filteredProducts.length === 1 ? 'product found' : 'products found'}
@@ -414,6 +447,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
                       sortBy === opt ? styles.sortActive : ''
                     }`}
                     onClick={() => {
+                      triggerFilterShimmer();
                       setSortBy(opt);
                       setSortOpen(false);
                       setCurrentPage(1);
@@ -470,6 +504,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
                 type="button"
                 className={styles.chipRemove}
                 onClick={() => {
+                  triggerFilterShimmer();
                   setMinRating(0);
                   setCurrentPage(1);
                 }}
@@ -548,7 +583,24 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
 
         {/* Right Product Grid */}
         <section className={styles.gridArea} aria-label="Products catalog">
-          {filteredProducts.length === 0 ? (
+          {filterLoading ? (
+            <div className={styles.productGrid}>
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <div key={idx} className={styles.skeleton}>
+                  <div className={styles.skelImg} />
+                  <div className={styles.skelBody}>
+                    <div className={styles.skelRow} style={{ width: '40%', height: '12px' }} />
+                    <div className={styles.skelRow} style={{ width: '85%', height: '16px' }} />
+                    <div className={styles.skelRow} style={{ width: '50%', height: '14px' }} />
+                    <div className={styles.skelActions}>
+                      <div className={styles.skelBtn} />
+                      <div className={styles.skelBtn} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className={styles.emptyState}>
               <PackageSearch size={44} strokeWidth={1.5} className={styles.emptyIcon} />
               <h2 className={styles.emptyTitle}>No products found</h2>

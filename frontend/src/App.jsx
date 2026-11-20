@@ -10,7 +10,9 @@ import AIBuddyDrawer from './components/AIBuddyDrawer/AIBuddyDrawer';
 import AIFloatingTrigger from './components/AIFloatingTrigger/AIFloatingTrigger';
 import ProductsPage from './pages/ProductsPage';
 import SVGDefs from './components/SVGDefs';
+import { GLOBAL_SKELETON_MS } from './constants/ui';
 import './styles/global.scss';
+import './index.scss';
 
 export default function App() {
   /* ── Global UI state ── */
@@ -28,9 +30,120 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const timer = setTimeout(() => setPageLoading(false), 550);
+    const timer = setTimeout(() => setPageLoading(false), GLOBAL_SKELETON_MS);
     return () => clearTimeout(timer);
   }, []);
+
+  // Lightweight global smooth-scroll inertia controller (damped lerp on desktop wheel events)
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.matchMedia('(pointer: coarse)').matches) {
+      return;
+    }
+
+    let currentY = window.scrollY;
+    let targetY = window.scrollY;
+    let isRunning = false;
+    let rafId = null;
+
+    const isScrollableElement = (target) => {
+      let el = target;
+      while (el && el !== document.body && el !== document.documentElement) {
+        if (
+          el.getAttribute('role') === 'dialog' ||
+          el.getAttribute('aria-modal') === 'true'
+        ) {
+          return true;
+        }
+        const style = window.getComputedStyle(el);
+        const overflowY = style.overflowY;
+        if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 2) {
+          return true;
+        }
+        el = el.parentElement;
+      }
+      return false;
+    };
+
+    const updateScroll = () => {
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      targetY = Math.max(0, Math.min(maxScroll, targetY));
+      const diff = targetY - currentY;
+
+      if (Math.abs(diff) > 0.5) {
+        currentY += diff * 0.1;
+        window.scrollTo({ top: currentY, behavior: 'instant' });
+        rafId = requestAnimationFrame(updateScroll);
+      } else {
+        currentY = targetY;
+        window.scrollTo({ top: currentY, behavior: 'instant' });
+        isRunning = false;
+        rafId = null;
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }
+    };
+
+    const handleWheel = (e) => {
+      if (isScrollableElement(e.target) || e.ctrlKey) {
+        targetY = window.scrollY;
+        currentY = window.scrollY;
+        return;
+      }
+
+      e.preventDefault();
+      document.documentElement.style.scrollBehavior = 'auto';
+
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      targetY = Math.max(0, Math.min(maxScroll, targetY + e.deltaY));
+
+      if (!isRunning) {
+        isRunning = true;
+        currentY = window.scrollY;
+        rafId = requestAnimationFrame(updateScroll);
+      }
+    };
+
+    const handleScrollSync = () => {
+      if (!isRunning) {
+        targetY = window.scrollY;
+        currentY = window.scrollY;
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('scroll', handleScrollSync, { passive: true });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('scroll', handleScrollSync);
+      if (rafId) cancelAnimationFrame(rafId);
+      document.documentElement.style.scrollBehavior = 'smooth';
+    };
+  }, []);
+
+  // Subtle IntersectionObserver scroll-reveal for below-the-fold sections
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.05,
+        rootMargin: '0px 0px -20px 0px',
+      }
+    );
+
+    const elements = document.querySelectorAll('.scroll-reveal');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [currentPath, pageLoading]);
 
   // Listen to popstate (back/forward navigation)
   useEffect(() => {
@@ -112,24 +225,32 @@ export default function App() {
         <main style={{ width: '100%', margin: '0 auto', padding: '32px 0 0' }}>
           <Hero loading={pageLoading} onBuddyClick={() => setBuddyOpen(true)} />
 
-          <CategoryStrip
-            loading={pageLoading}
-            activeCategory={activeCategory}
-            onSelect={handleCategorySelect}
-          />
+          <div className="scroll-reveal">
+            <CategoryStrip
+              loading={pageLoading}
+              activeCategory={activeCategory}
+              onSelect={handleCategorySelect}
+            />
+          </div>
 
-          <ProductGrid
-            activeCategory={activeCategory}
-            searchQuery={searchQuery}
-            onAddToCart={addToCart}
-            onBuddyClick={() => setBuddyOpen(true)}
-          />
+          <div className="scroll-reveal">
+            <ProductGrid
+              activeCategory={activeCategory}
+              searchQuery={searchQuery}
+              onAddToCart={addToCart}
+              onBuddyClick={() => setBuddyOpen(true)}
+            />
+          </div>
 
-          <TrustStrip />
+          <div className="scroll-reveal">
+            <TrustStrip />
+          </div>
         </main>
       )}
 
-      <Footer />
+      <div className="scroll-reveal">
+        <Footer />
+      </div>
 
       <CartDrawer
         isOpen={cartOpen}
@@ -141,6 +262,7 @@ export default function App() {
       <AIBuddyDrawer
         isOpen={buddyOpen}
         onClose={() => setBuddyOpen(false)}
+        onAddToCart={addToCart}
       />
 
       {/* Floating AI-Buddy trigger: hidden when either drawer is open */}

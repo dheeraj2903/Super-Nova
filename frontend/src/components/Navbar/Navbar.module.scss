@@ -21,20 +21,24 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(250, 248, 245, 0.92);
+  background: rgba(250, 248, 245, 0.94);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid $border-subtle;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
 }
 
 .inner {
-  max-width: $max-width;
-  width: 94%;
+  max-width: 1360px;
+  width: 100%;
   margin: 0 auto;
-  height: $nav-height;
-  padding: 0;
+  min-height: 70px;
+  padding: 14px 32px;
+  box-sizing: border-box;
   @include flex-between;
-  gap: 20px;
+  gap: 24px;
 }
 
 // ── Left ──────────────────────────────────────────────────────────────────────
@@ -175,19 +179,24 @@
   color: $text-primary;
   text-overflow: ellipsis;
   outline: none;
-  transition: border-color 0.22s $ease-luxury, box-shadow 0.22s $ease-luxury;
+  transition: border-color 0.22s $ease-luxury, background 0.22s $ease-luxury;
 
   &::placeholder {
     color: $text-muted;
     text-overflow: ellipsis;
   }
+
+  &:focus {
+    outline: none;
+    border-color: #C46210;
+  }
 }
 
 .searchFocused {
   .searchInput {
-    border-color: $border-strong;
-    box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.07);
-    background: $bg-canvas;
+    border-color: #C46210;
+    box-shadow: none;
+    background: #FFFFFF;
   }
 
   .searchIcon {
@@ -221,10 +230,11 @@
   top: calc(100% + 10px);
   left: 0;
   right: 0;
-  background: $bg-canvas;
-  border: 1px solid $border-subtle;
-  border-radius: $radius-xl;
-  box-shadow: $shadow-float;
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px -12px rgba(24, 24, 27, 0.14);
   padding: 20px;
   z-index: 50;
   animation: dropIn 0.22s $ease-luxury;
@@ -238,6 +248,34 @@
   text-transform: uppercase;
   color: $text-muted;
   margin-bottom: 10px;
+}
+
+.categoryPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.catPill {
+  display: inline-flex;
+  align-items: center;
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #18181B;
+  background: #FAF8F5;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-pill;
+  padding: 6px 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s $ease-std;
+
+  &:hover {
+    background: #18181B;
+    color: #FFFFFF;
+    border-color: #18181B;
+  }
 }
 
 .catGrid {
@@ -370,56 +408,92 @@
 // ── Right Nav ─────────────────────────────────────────────────────────────────
 .right {
   @include flex-start;
-  gap: 6px;
+  gap: 24px;
   flex-shrink: 0;
 }
 
 .navLink {
-  @include flex-start;
-  gap: 5px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
   font-family: $font-body;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   color: $text-secondary;
   background: none;
   border: none;
   text-decoration: none;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: $radius-pill;
-  transition: color 0.15s $ease-std, background 0.15s;
+  padding: 8px 0;
+  transition: color 0.18s $ease-std;
 
   &:hover {
-    color: $text-primary;
-    background: $bg-surface;
+    color: #18181B;
   }
 }
 
 .navLinkActive {
   color: #C46210 !important;
   font-weight: 600;
-  background: rgba(196, 98, 16, 0.08);
+  background: none !important;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 2.5px;
+    background: #C46210;
+    border-radius: 2px;
+    pointer-events: none;
+    width: var(--underline-width, 35%);
+    transition: width 0.14s ease-out;
+  }
 
   &:hover {
     color: #C46210;
-    background: rgba(196, 98, 16, 0.12);
+    background: none !important;
+  }
+}
+
+.avatarBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
+  color: #18181B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s $ease-luxury;
+
+  &:hover,
+  &.avatarActive {
+    background: #18181B;
+    color: #FFFFFF;
+    border-color: #18181B;
   }
 }
 
 .accountWrap {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .accountDropdown {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  min-width: 200px;
+  min-width: 215px;
   background: $bg-canvas;
   border: 1px solid $border-subtle;
   border-radius: $radius-lg;
   box-shadow: $shadow-float;
-  padding: 6px;
+  padding: 8px;
   z-index: 50;
   animation: dropIn 0.22s $ease-luxury;
 }
@@ -436,11 +510,26 @@
   font-size: 13.5px;
   font-weight: 500;
   color: $text-primary;
+  text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, color 0.15s;
 
   &:hover {
     background: $bg-surface;
+    color: $text-primary;
+  }
+}
+
+.accountHighlight {
+  color: #C46210 !important;
+  font-weight: 600;
+  border-bottom: 1px solid #E6E1D6;
+  margin-bottom: 4px;
+  padding-bottom: 10px;
+
+  &:hover {
+    color: #A8500A !important;
+    background: rgba(196, 98, 16, 0.06);
   }
 }
 
@@ -553,7 +642,6 @@
     flex-shrink: 0;
   }
 
-  .accountWrap,
   .navLink:not(.cartBtn) {
     display: none;
   }
@@ -568,8 +656,9 @@
 @media (max-width: 680px) {
   .inner {
     flex-wrap: wrap;
+    min-height: auto;
     height: auto;
-    padding: 10px 0 12px;
+    padding: 10px 16px 12px;
     gap: 10px;
   }
 

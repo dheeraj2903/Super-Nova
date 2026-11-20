@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles, Zap } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Zap } from 'lucide-react';
+import AiSparkleIcon from '../AiSparkleIcon';
 import { useRevealOnScroll } from '../../hooks/useStorefront';
+import { GLOBAL_SKELETON_MS } from '../../constants/ui';
 import styles from './Hero.module.scss';
 
 const HERO_SLIDES = [
@@ -26,30 +28,63 @@ const HERO_SLIDES = [
   },
 ];
 
+const DURATION = 4500;
+
 export default function Hero({ onBuddyClick, loading: propLoading }) {
   const ref = useRevealOnScroll(0.1);
   const [internalLoading, setInternalLoading] = useState(propLoading !== undefined ? propLoading : true);
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  const timeoutRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
+  const remainingRef = useRef(DURATION);
+
   useEffect(() => {
     if (propLoading !== undefined) {
       setInternalLoading(propLoading);
     } else {
-      const timer = setTimeout(() => setInternalLoading(false), 550);
+      const timer = setTimeout(() => setInternalLoading(false), GLOBAL_SKELETON_MS);
       return () => clearTimeout(timer);
     }
   }, [propLoading]);
 
   const isLoading = propLoading !== undefined ? propLoading : internalLoading;
 
+  const goToSlide = (idx) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    remainingRef.current = DURATION;
+    startTimeRef.current = Date.now();
+    setActiveSlide(idx);
+  };
+
+  const nextSlide = () => {
+    setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    remainingRef.current = DURATION;
+    startTimeRef.current = Date.now();
+  };
+
   useEffect(() => {
-    if (isPaused || isLoading) return;
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 4500);
-    return () => clearInterval(interval);
-  }, [isPaused, isLoading]);
+    if (isLoading) return;
+
+    if (isPaused) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      const elapsed = Date.now() - startTimeRef.current;
+      remainingRef.current = Math.max(0, remainingRef.current - elapsed);
+    } else {
+      startTimeRef.current = Date.now();
+      timeoutRef.current = setTimeout(() => {
+        nextSlide();
+      }, remainingRef.current);
+    }
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [activeSlide, isPaused, isLoading]);
 
   if (isLoading) {
     return (
@@ -104,7 +139,7 @@ export default function Hero({ onBuddyClick, loading: propLoading }) {
             Shop Collection <ArrowRight size={16} strokeWidth={2} />
           </a>
           <button className={styles.ctaOutline} onClick={onBuddyClick}>
-            <Sparkles size={15} strokeWidth={2} /> Ask AI-Buddy
+            <AiSparkleIcon size={16} /> Ask AI-Buddy
           </button>
         </div>
 
@@ -147,13 +182,14 @@ export default function Hero({ onBuddyClick, loading: propLoading }) {
           {HERO_SLIDES.map((_, idx) => (
             <button
               key={idx}
+              type="button"
               className={`${styles.progressPill} ${idx === activeSlide ? styles.progressPillActive : ''}`}
-              onClick={() => setActiveSlide(idx)}
+              onClick={() => goToSlide(idx)}
               aria-label={`Go to slide ${idx + 1}`}
             >
               {idx === activeSlide && (
                 <span
-                  key={`${activeSlide}-${isPaused}`}
+                  key={activeSlide}
                   className={`${styles.progressBar} ${isPaused ? styles.paused : ''}`}
                 />
               )}

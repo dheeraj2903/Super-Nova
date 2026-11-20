@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { Heart, ShoppingCart, Zap } from 'lucide-react';
 import { useWishlist } from '../../hooks/useStorefront';
 import styles from './ProductCard.module.scss';
 
 export default function ProductCard({ product, onAddToCart, onShowToast }) {
-  const [hovered, setHovered] = useState(false);
   const { isWishlisted, toggle } = useWishlist();
   const wishlisted = isWishlisted(product._id);
 
@@ -20,23 +18,13 @@ export default function ProductCard({ product, onAddToCart, onShowToast }) {
   };
 
   return (
-    <article
-      className={styles.card}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <article className={styles.card}>
       {/* Image area */}
       <div className={styles.imgWrap}>
         <img
           src={product.image}
           alt={product.title}
-          className={`${styles.img} ${hovered ? styles.imgOut : styles.imgIn}`}
-          loading="lazy"
-        />
-        <img
-          src={product.imageHover}
-          alt={product.title + ' – alternate view'}
-          className={`${styles.img} ${styles.imgHover} ${hovered ? styles.imgIn : styles.imgOut}`}
+          className={styles.img}
           loading="lazy"
         />
 

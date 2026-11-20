@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { mockProducts } from '../../data/mockProducts';
 import { useRevealOnScroll } from '../../hooks/useStorefront';
+import { GLOBAL_SKELETON_MS } from '../../constants/ui';
 import ProductCard from '../ProductCard/ProductCard';
 import Toast from '../Toast/Toast';
 import styles from './ProductGrid.module.scss';
@@ -73,7 +74,7 @@ export default function ProductGrid({ activeCategory, searchQuery, onAddToCart, 
 
       setProducts(filtered);
       setLoading(false);
-    }, 600);
+    }, GLOBAL_SKELETON_MS);
 
     return () => clearTimeout(timer);
   }, [activeCategory, searchQuery, sort, priceMin, priceMax]);

@@ -4,9 +4,10 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(17, 17, 17, 0.35);
+  background: rgba(17, 17, 17, 0.4);
   backdrop-filter: blur(4px);
-  z-index: 44;
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 55;
   animation: fadeIn 0.25s $ease-luxury;
 }
 
@@ -20,26 +21,30 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(400px, 100vw);
+  width: min(420px, 100vw);
   max-width: 100vw;
-  background: $bg-canvas;
-  z-index: 45;
+  background: #FAF8F5;
+  z-index: 60;
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
-  transition: transform 0.38s $ease-luxury;
-  box-shadow: -20px 0 60px rgba(17, 17, 17, 0.12);
+  opacity: 0;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: -20px 0 60px rgba(17, 17, 17, 0.14);
 
   &.open {
     transform: translateX(0);
+    opacity: 1;
   }
 }
 
-// Head
+// ── Header ────────────────────────────────────────────────────────────────────
 .head {
   @include flex-between;
-  padding: 20px 22px 18px;
-  background: #F2EFE9;
+  padding: 18px 20px 16px;
+  background: radial-gradient(circle at top left, rgba(196, 98, 16, 0.06), #FAF8F5 70%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid #E6E1D6;
   flex-shrink: 0;
 }
@@ -50,44 +55,56 @@
 }
 
 .avatarWrap {
-  position: relative;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   @include flex-center;
   background: #C46210;
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(196, 98, 16, 0.25);
-}
-
-.avatarIcon {
-  font-size: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(196, 98, 16, 0.28);
+  flex-shrink: 0;
   color: #FFFFFF;
 }
 
-.statusDot {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  width: 9px;
-  height: 9px;
-  background: #16A34A;
-  border-radius: 50%;
-  border: 2px solid #F2EFE9;
+.titleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .title {
   font-family: $font-heading;
   font-size: 16px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: #18181B;
-  margin-bottom: 2px;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.status {
+.tagPill {
+  font-family: $font-body;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #C46210;
+  background: rgba(196, 98, 16, 0.08);
+  border: 1px solid rgba(196, 98, 16, 0.16);
+  border-radius: $radius-pill;
+  padding: 2px 8px;
+  line-height: 1.3;
+}
+
+.subtitle {
   font-family: $font-body;
   font-size: 11.5px;
-  color: #57534E;
+  color: #78716C;
+  margin: 0;
 }
 
 .closeBtn {
@@ -107,54 +124,50 @@
   }
 }
 
-// Body (messages)
+// ── Message Stream ────────────────────────────────────────────────────────────
 .body {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 20px 12px;
+  padding: 20px 18px 12px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: $border-subtle; border-radius: 4px; }
+  &::-webkit-scrollbar-thumb { background: #E6E1D6; border-radius: 4px; }
 }
 
 .msgRow {
   display: flex;
-  gap: 10px;
-  align-items: flex-start;
+  width: 100%;
 
   &.user {
-    flex-direction: row-reverse;
+    justify-content: flex-end;
   }
-}
 
-.msgAvatar {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  @include flex-center;
-  background: $text-primary;
-  border-radius: 50%;
-  font-size: 12px;
-  color: $bg-canvas;
+  &.assistant {
+    justify-content: flex-start;
+  }
 }
 
 .bubble {
-  max-width: 80%;
+  width: 100%;
 
   .user & {
-    background: $text-primary;
-    border-radius: $radius-lg $radius-lg 4px $radius-lg;
-    padding: 11px 15px;
+    width: auto;
+    max-width: 82%;
+    background: #18181B;
+    border-radius: 14px;
+    padding: 10px 14px;
   }
 
   .assistant & {
-    background: $bg-surface;
-    border-radius: $radius-lg $radius-lg $radius-lg 4px;
-    padding: 11px 15px;
+    background: #FFFFFF;
+    border: 1px solid #E6E1D6;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 8px -2px rgba(24, 24, 27, 0.04);
   }
 }
 
@@ -162,105 +175,237 @@
   font-family: $font-body;
   font-size: 13.5px;
   line-height: 1.6;
+  margin: 0;
 
   .user & {
-    color: $bg-canvas;
+    color: #FAF8F5;
   }
 
   .assistant & {
-    color: $text-primary;
+    color: #18181B;
   }
 
   strong {
     font-weight: 700;
+    color: inherit;
   }
 }
 
-// Quick chips
-.chips {
+// ── Embedded Product Recommendation Mini-Cards ───────────────────────────────
+.productRecs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  padding: 12px 20px;
-  border-top: 1px solid $border-subtle;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #F2EFE9;
+}
+
+.recCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #FAF8F5;
+  border: 1px solid #E6E1D6;
+  border-radius: 10px;
+  padding: 8px 10px;
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: #D4CEBF;
+    background: #F4F1EA;
+  }
+}
+
+.recImg {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #EAE5DC;
+}
+
+.recInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recTitle {
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #18181B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recPriceRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recPrice {
+  font-family: $font-body;
+  font-size: 12px;
+  font-weight: 700;
+  color: #C46210;
+  font-variant-numeric: tabular-nums;
+}
+
+.recDiscount {
+  font-family: $font-body;
+  font-size: 10px;
+  font-weight: 700;
+  color: #16A34A;
+  background: rgba(22, 163, 74, 0.08);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.recActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.recViewBtn {
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 500;
+  color: #57534E;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-pill;
+  padding: 4px 9px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    color: #18181B;
+    border-color: #18181B;
+  }
+}
+
+.recCartBtn {
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: #C46210;
+  border: none;
+  border-radius: $radius-pill;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  white-space: nowrap;
+
+  &:hover {
+    background: #A8500A;
+    transform: scale(1.02);
+  }
+}
+
+// ── Quick Chips (Clean 2-Column Grid) ─────────────────────────────────────────
+.chips {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 12px 18px;
+  background: #FAF8F5;
+  border-top: 1px solid #E6E1D6;
   flex-shrink: 0;
 }
 
 .chip {
   font-family: $font-body;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 500;
-  color: $text-secondary;
-  background: $bg-surface;
-  border: 1px solid $border-subtle;
-  border-radius: $radius-pill;
-  padding: 6px 13px;
+  color: #57534E;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 8px;
+  padding: 8px 10px;
   cursor: pointer;
-  transition: all 0.15s $ease-std;
-  white-space: nowrap;
+  text-align: left;
+  line-height: 1.35;
+  transition: all 0.18s $ease-std;
 
   &:hover {
-    background: $accent-primary;
-    color: #FFFFFF;
-    border-color: $accent-primary;
+    border-color: #C46210;
+    color: #C46210;
+    background: rgba(196, 98, 16, 0.04);
   }
 }
 
-// Input row
+// ── Command Input Box ─────────────────────────────────────────────────────────
 .inputWrap {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  padding: 14px 20px 24px;
-  border-top: 1px solid $border-subtle;
+  padding: 12px 18px 20px;
+  background: #FAF8F5;
+  border-top: 1px solid #E6E1D6;
   flex-shrink: 0;
+}
+
+.commandBox {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 14px;
+  padding: 4px 6px 4px 14px;
+  box-shadow: 0 2px 8px -2px rgba(24, 24, 27, 0.05);
+  transition: border-color 0.2s $ease-luxury, box-shadow 0.2s $ease-luxury;
+
+  &:focus-within {
+    border: 1.5px solid #C46210;
+    box-shadow: 0 0 0 3px rgba(196, 98, 16, 0.12);
+  }
 }
 
 .input {
   flex: 1;
   font-family: $font-body;
-  font-size: 13.5px;
-  color: $text-primary;
-  background: $bg-surface;
-  border: 1.5px solid $border-subtle;
-  border-radius: $radius-md;
-  padding: 11px 14px;
+  font-size: 13px;
+  color: #18181B;
+  background: transparent;
+  border: none;
+  padding: 8px 0;
   resize: none;
   outline: none;
   line-height: 1.5;
-  transition: border-color 0.2s $ease-luxury;
 
   &::placeholder {
-    color: $text-muted;
-  }
-
-  &:focus {
-    border-color: $accent-primary;
+    color: #A8A29E;
   }
 }
 
 .sendBtn {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   @include flex-center;
-  background: $accent-primary;
+  background: #C46210;
   border: none;
-  border-radius: $radius-md;
+  border-radius: 10px;
   cursor: pointer;
   color: #FFFFFF;
   transition: background 0.15s, transform 0.15s;
 
   &:hover:not(:disabled) {
-    background: $accent-primary-hover;
+    background: #A8500A;
+    transform: scale(1.05);
   }
 
   &:disabled {
-    opacity: 0.3;
+    opacity: 0.35;
     cursor: not-allowed;
-  }
-
-  &:not(:disabled):hover {
-    transform: scale(1.06);
   }
 }

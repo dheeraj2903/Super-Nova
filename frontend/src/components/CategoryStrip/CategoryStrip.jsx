@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { categories } from '../../data/mockProducts';
 import { useRevealOnScroll } from '../../hooks/useStorefront';
+import { GLOBAL_SKELETON_MS } from '../../constants/ui';
 import styles from './CategoryStrip.module.scss';
 
 export default function CategoryStrip({ activeCategory, onSelect, loading: propLoading }) {
@@ -12,7 +13,7 @@ export default function CategoryStrip({ activeCategory, onSelect, loading: propL
     if (propLoading !== undefined) {
       setInternalLoading(propLoading);
     } else {
-      const timer = setTimeout(() => setInternalLoading(false), 550);
+      const timer = setTimeout(() => setInternalLoading(false), GLOBAL_SKELETON_MS);
       return () => clearTimeout(timer);
     }
   }, [propLoading]);
