@@ -14,7 +14,7 @@ export default function Footer() {
         <div className={styles.top}>
           <div className={styles.brand}>
             <a href="/" className={styles.wordmark}>
-              SUPERNOVA<span className={styles.dot}>•</span>
+              SUPERNOVA<span className={styles.dot}>.</span>
             </a>
             <p className={styles.tagline}>
               Quietly confident, refined lifestyle commerce designed for purposeful living and effortless catalog curation.

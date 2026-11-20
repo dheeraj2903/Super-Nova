@@ -1,10 +1,51 @@
+import { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { categories } from '../../data/mockProducts';
 import { useRevealOnScroll } from '../../hooks/useStorefront';
 import styles from './CategoryStrip.module.scss';
 
-export default function CategoryStrip({ activeCategory, onSelect }) {
+export default function CategoryStrip({ activeCategory, onSelect, loading: propLoading }) {
   const ref = useRevealOnScroll(0.1);
+  const [internalLoading, setInternalLoading] = useState(propLoading !== undefined ? propLoading : true);
+
+  useEffect(() => {
+    if (propLoading !== undefined) {
+      setInternalLoading(propLoading);
+    } else {
+      const timer = setTimeout(() => setInternalLoading(false), 550);
+      return () => clearTimeout(timer);
+    }
+  }, [propLoading]);
+
+  const isLoading = propLoading !== undefined ? propLoading : internalLoading;
+
+  if (isLoading) {
+    return (
+      <section className={`${styles.section} container`}>
+        <div className={styles.header}>
+          <div>
+            <h2 className={styles.title}>Shop by Category</h2>
+            <p className={styles.subtitle}>Curated essentials across everyday tech &amp; lifestyle</p>
+          </div>
+          <button className={styles.viewAll}>
+            View All (6) <ChevronRight size={15} strokeWidth={2} />
+          </button>
+        </div>
+
+        <div className={styles.grid}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={styles.skelCard}>
+              <div className={styles.skelImg} />
+              <div className={styles.skelInfo}>
+                <div className={styles.skelName} />
+                <div className={styles.skelCount} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={`${styles.section} container`} ref={ref}>

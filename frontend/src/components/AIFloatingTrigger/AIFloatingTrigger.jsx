@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import styles from './AIFloatingTrigger.module.scss';
 
-export default function AIFloatingTrigger({ onClick }) {
+export default function AIFloatingTrigger({ onClick, isOpen, isCartOpen }) {
   const [hovered, setHovered] = useState(false);
+
+  if (isOpen || isCartOpen) return null;
 
   return (
     <div className={styles.wrap}>
-      {hovered && (
-        <div className={styles.tooltip} aria-hidden="true">
-          Ask AI-Buddy
-        </div>
-      )}
       <button
         className={styles.btn}
         onClick={onClick}
@@ -19,7 +16,7 @@ export default function AIFloatingTrigger({ onClick }) {
         aria-label="Open AI-Buddy shopping assistant"
       >
         <span className={`${styles.sparkle} ${hovered ? styles.sparkleHovered : ''}`}>✦</span>
-        <span className={styles.statusDot} />
+        <span className={styles.label}>Ask AI</span>
       </button>
     </div>
   );

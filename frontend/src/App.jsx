@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
 import CategoryStrip from './components/CategoryStrip/CategoryStrip';
@@ -13,11 +13,17 @@ import './styles/global.scss';
 
 export default function App() {
   /* ── Global UI state ── */
+  const [pageLoading, setPageLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [buddyOpen, setBuddyOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All Categories');
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPageLoading(false), 550);
+    return () => clearTimeout(timer);
+  }, []);
 
   /* ── Cart helpers ── */
   const addToCart = useCallback((product) => {
@@ -53,10 +59,11 @@ export default function App() {
         onBuddyClick={() => setBuddyOpen(true)}
       />
 
-      <main style={{ width: '100%', margin: '0 auto', padding: '32px 0 96px' }}>
-        <Hero onBuddyClick={() => setBuddyOpen(true)} />
+      <main style={{ width: '100%', margin: '0 auto', padding: '32px 0 0' }}>
+        <Hero loading={pageLoading} onBuddyClick={() => setBuddyOpen(true)} />
 
         <CategoryStrip
+          loading={pageLoading}
           activeCategory={activeCategory}
           onSelect={handleCategorySelect}
         />
@@ -85,8 +92,14 @@ export default function App() {
         onClose={() => setBuddyOpen(false)}
       />
 
-      {/* Floating AI-Buddy trigger */}
-      <AIFloatingTrigger onClick={() => setBuddyOpen(true)} />
+      {/* Floating AI-Buddy trigger: hidden when either drawer is open */}
+      {!buddyOpen && !cartOpen && (
+        <AIFloatingTrigger
+          isOpen={buddyOpen}
+          isCartOpen={cartOpen}
+          onClick={() => setBuddyOpen(true)}
+        />
+      )}
     </>
   );
 }

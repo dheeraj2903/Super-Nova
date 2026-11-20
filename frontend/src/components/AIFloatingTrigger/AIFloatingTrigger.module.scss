@@ -8,70 +8,64 @@
   z-index: 50;
   display: flex;
   align-items: center;
-  gap: 10px;
-}
 
-.tooltip {
-  background: $text-primary;
-  color: $bg-canvas;
-  font-family: $font-body;
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 7px 14px;
-  border-radius: $radius-pill;
-  white-space: nowrap;
-  box-shadow: $shadow-float;
-  animation: tooltipIn 0.2s $ease-luxury;
-  pointer-events: none;
-}
-
-@keyframes tooltipIn {
-  from { opacity: 0; transform: translateX(6px); }
-  to   { opacity: 1; transform: translateX(0); }
+  @media (max-width: 480px) {
+    bottom: 20px;
+    right: 20px;
+  }
 }
 
 .btn {
-  position: relative;
-  width: 54px;
-  height: 54px;
+  height: 48px;
+  border-radius: 999px;
+  padding: 0 18px;
   background: #C46210;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  @include flex-center;
+  box-shadow: 0 10px 25px -5px rgba(196, 98, 16, 0.45);
+  display: flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(196, 98, 16, 0.28);
-  transition: transform 0.3s $ease-luxury, box-shadow 0.3s $ease-luxury, background 0.2s $ease-std;
+  transition: transform 0.25s $ease-luxury, box-shadow 0.25s $ease-luxury, background 0.2s $ease-std;
 
   &:hover {
     background: #A8500A;
-    transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 14px 30px rgba(196, 98, 16, 0.38);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px -4px rgba(196, 98, 16, 0.55);
   }
 
   &:active {
-    transform: translateY(-1px) scale(1.01);
+    transform: translateY(0);
+  }
+
+  @media (max-width: 480px) {
+    width: 48px;
+    padding: 0;
+    justify-content: center;
   }
 }
 
 .sparkle {
-  font-size: 22px;
+  font-size: 16px;
   color: #FFFFFF;
-  transition: transform 0.3s $ease-luxury;
-  user-select: none;
   line-height: 1;
+  user-select: none;
+  transition: transform 0.3s $ease-luxury;
 }
 
 .sparkleHovered {
-  transform: rotate(15deg);
+  transform: rotate(20deg) scale(1.1);
 }
 
-.statusDot {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 10px;
-  height: 10px;
-  background: #16A34A;
-  border-radius: 50%;
-  border: 2px solid #FAF8F5;
+.label {
+  font-family: $font-heading;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #FFFFFF;
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    display: none;
+  }
 }

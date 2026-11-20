@@ -59,7 +59,7 @@ export default function ProductCard({ product, onAddToCart, onShowToast }) {
       </div>
 
       {/* Body */}
-      <div className={styles.body}>
+      <div className={`${styles.body} ${styles.cardBody}`}>
         <div className={styles.meta}>
           <span className={styles.catPill}>{product.category}</span>
           <span className={styles.rating}>
@@ -69,7 +69,6 @@ export default function ProductCard({ product, onAddToCart, onShowToast }) {
         </div>
 
         <h3 className={styles.title}>{product.title}</h3>
-        <p className={styles.desc}>{product.description}</p>
 
         <div className={styles.pricing}>
           <span className={styles.price}>₹{product.price.toLocaleString('en-IN')}</span>

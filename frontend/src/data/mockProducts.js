@@ -63,8 +63,8 @@ export const mockProducts = [
     discount: 28,
     rating: 4.8,
     reviewCount: 310,
-    image: 'https://images.unsplash.com/photo-1622445262464-84b14e0745b1?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1564517945244-d371c925640b?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p006',
@@ -89,8 +89,8 @@ export const mockProducts = [
     discount: 24,
     rating: 4.8,
     reviewCount: 112,
-    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1577937927133-66ef06acdf18?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1522675397120-8cb88c83ac16?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1521001819313-f84e889dd60f?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p008',
@@ -128,7 +128,7 @@ export const mockProducts = [
     discount: 28,
     rating: 4.6,
     reviewCount: 203,
-    image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=600&q=80&auto=format&fit=crop',
     imageHover: 'https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=600&q=80&auto=format&fit=crop',
   },
   {
@@ -154,8 +154,8 @@ export const mockProducts = [
     discount: 25,
     rating: 4.5,
     reviewCount: 44,
-    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1746280978271-1ef1a2d9447f?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1744697307482-0f55e2e0c1b6?w=600&q=80&auto=format&fit=crop',
   },
 ];
 

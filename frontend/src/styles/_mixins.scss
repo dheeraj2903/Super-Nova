@@ -107,9 +107,9 @@
 @mixin shimmer-base {
   background: linear-gradient(
     90deg,
-    $bg-surface 0%,
-    #ECEAE9 50%,
-    $bg-surface 100%
+    #EAE5DC 0%,
+    #F4F1EA 50%,
+    #EAE5DC 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.4s ease-in-out infinite;

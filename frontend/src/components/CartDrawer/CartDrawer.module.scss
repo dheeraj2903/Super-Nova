@@ -6,7 +6,7 @@
   inset: 0;
   background: rgba(17, 17, 17, 0.4);
   backdrop-filter: blur(4px);
-  z-index: 44;
+  z-index: 60;
   animation: fadeIn 0.25s $ease-luxury;
 }
 
@@ -33,7 +33,7 @@
   width: 420px;
   max-width: 100vw;
   background: $bg-canvas;
-  z-index: 45;
+  z-index: 61;
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
@@ -114,9 +114,19 @@
 
 .shopBtn {
   @include btn-solid;
+  background: #C46210;
+  color: #FFFFFF;
   padding: 11px 22px;
   font-size: 13.5px;
   border-radius: $radius-pill;
+  transition: all 0.25s $ease-luxury;
+
+  &:hover {
+    background: #A8500A;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(196, 98, 16, 0.35);
+  }
 }
 
 // List

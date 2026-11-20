@@ -9,10 +9,25 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
   const [localQuery, setLocalQuery] = useState('');
   const [catOpen, setCatOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [isCompactSearch, setIsCompactSearch] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 1100;
+    }
+    return false;
+  });
   const debouncedQuery = useDebounce(localQuery, 280);
   const searchRef = useRef(null);
   const catRef = useRef(null);
   const accountRef = useRef(null);
+
+  // Responsive placeholder
+  useEffect(() => {
+    function handleResize() {
+      setIsCompactSearch(window.innerWidth < 1100);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Sync debounced query upward
   useEffect(() => {
@@ -79,7 +94,7 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
           {/* ── Left: Wordmark + Categories ── */}
           <div className={styles.left}>
             <a href="/" className={styles.wordmark}>
-              SUPERNOVA<span className={styles.dot}>•</span>
+              SUPERNOVA<span className={styles.dot}>.</span>
             </a>
 
             <div className={styles.catWrapper} ref={catRef}>
@@ -122,7 +137,7 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
             <Search size={15} strokeWidth={2} className={styles.searchIcon} />
             <input
               type="text"
-              placeholder="Search products, brands & categories..."
+              placeholder={isCompactSearch ? 'Search...' : 'Search products...'}
               className={styles.searchInput}
               value={localQuery}
               onChange={(e) => setLocalQuery(e.target.value)}
