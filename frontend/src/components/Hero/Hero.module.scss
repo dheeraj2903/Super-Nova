@@ -3,14 +3,17 @@
 
 .hero {
   @include reveal-ready;
+  max-width: $max-width;
+  width: 94%;
+  margin: 0 auto 56px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   align-items: center;
-  background: $bg-surface;
+  background: #F4F4F2;
+  border: 1px solid #E5E7EB;
   border-radius: $radius-xl;
   padding: 48px 52px 48px 56px;
-  margin-bottom: 56px;
   overflow: hidden;
 
   @include lg {

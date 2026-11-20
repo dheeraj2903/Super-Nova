@@ -29,9 +29,10 @@
 
 .inner {
   max-width: $max-width;
+  width: 94%;
   margin: 0 auto;
   height: $nav-height;
-  padding: 0 32px;
+  padding: 0;
   @include flex-between;
   gap: 20px;
 }
@@ -469,7 +470,7 @@
 // ── Responsive ────────────────────────────────────────────────────────────────
 @include md {
   .inner {
-    padding: 0 16px;
+    padding: 0;
     gap: 12px;
   }
 

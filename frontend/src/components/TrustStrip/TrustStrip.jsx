@@ -3,10 +3,10 @@ import { useRevealOnScroll } from '../../hooks/useStorefront';
 import styles from './TrustStrip.module.scss';
 
 const TRUST_ITEMS = [
-  { icon: ShieldCheck, label: '100% Genuine Products', sub: 'Authenticated atelier lineage' },
+  { icon: ShieldCheck, label: '100% Genuine Products', sub: 'Verified brand warranty' },
   { icon: RefreshCw, label: '7-Day Effortless Returns', sub: 'Doorstep pickup on request' },
   { icon: Lock, label: 'Encrypted 256-bit Checkout', sub: 'Strict bank-grade PCI standard' },
-  { icon: Truck, label: 'Express Delivery Worldwide', sub: 'Precision white-glove transit' },
+  { icon: Truck, label: 'Express Delivery Worldwide', sub: 'Fast, tracked doorstep delivery' },
 ];
 
 export default function TrustStrip() {

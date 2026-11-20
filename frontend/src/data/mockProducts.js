@@ -11,8 +11,8 @@ export const mockProducts = [
     discount: 24,
     rating: 4.8,
     reviewCount: 142,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p002',
@@ -24,8 +24,8 @@ export const mockProducts = [
     discount: 30,
     rating: 4.9,
     reviewCount: 218,
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p003',
@@ -37,8 +37,8 @@ export const mockProducts = [
     discount: 22,
     rating: 4.7,
     reviewCount: 95,
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p004',
@@ -63,8 +63,8 @@ export const mockProducts = [
     discount: 28,
     rating: 4.8,
     reviewCount: 310,
-    image: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1622445262464-84b14e0745b1?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p006',
@@ -77,7 +77,7 @@ export const mockProducts = [
     rating: 4.9,
     reviewCount: 174,
     image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p007',
@@ -89,8 +89,8 @@ export const mockProducts = [
     discount: 24,
     rating: 4.8,
     reviewCount: 112,
-    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1577937927133-66ef06acdf18?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p008',
@@ -103,7 +103,7 @@ export const mockProducts = [
     rating: 4.9,
     reviewCount: 68,
     image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p009',
@@ -116,7 +116,7 @@ export const mockProducts = [
     rating: 4.7,
     reviewCount: 89,
     image: 'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p010',
@@ -141,8 +141,8 @@ export const mockProducts = [
     discount: 26,
     rating: 4.8,
     reviewCount: 157,
-    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&q=80&auto=format&fit=crop',
   },
   {
     _id: 'p012',
@@ -154,8 +154,8 @@ export const mockProducts = [
     discount: 25,
     rating: 4.5,
     reviewCount: 44,
-    image: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=600&q=80&auto=format&fit=crop',
-    imageHover: 'https://images.unsplash.com/photo-1573408301185-9519f94c4b80?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&auto=format&fit=crop',
+    imageHover: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&auto=format&fit=crop',
   },
 ];
 
@@ -164,25 +164,25 @@ export const categories = [
     id: 'electronics',
     name: 'Electronics',
     count: 42,
-    image: 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=400&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80&auto=format&fit=crop',
   },
   {
     id: 'audio',
     name: 'Audio',
     count: 28,
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80&auto=format&fit=crop',
   },
   {
     id: 'footwear',
     name: 'Footwear',
     count: 56,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&q=80&auto=format&fit=crop',
   },
   {
     id: 'bags',
     name: 'Bags',
     count: 31,
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80&auto=format&fit=crop',
   },
   {
     id: 'home-decor',

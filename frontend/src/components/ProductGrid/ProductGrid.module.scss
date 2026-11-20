@@ -13,7 +13,9 @@
 
 .section {
   @include reveal-ready;
-  margin-bottom: 64px;
+  max-width: $max-width;
+  width: 94%;
+  margin: 0 auto 64px;
 }
 
 // ── Header ────────────────────────────────────────────────────────────────────

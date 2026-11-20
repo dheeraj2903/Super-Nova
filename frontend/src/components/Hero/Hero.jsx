@@ -41,8 +41,8 @@ export default function Hero({ onBuddyClick }) {
 
       <div className={styles.right}>
         <img
-          src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=900&q=85&auto=format&fit=crop"
-          alt="Curated lifestyle essentials – headphones, notebook and watch on stone"
+          src="https://images.unsplash.com/photo-1705505185043-6ff5a09423d9?w=900&q=85&auto=format&fit=crop"
+          alt="Curated lifestyle essentials – matte-black headphones, analog watch, and minimal desk essentials on dark stone"
           className={styles.heroImage}
         />
         <div className={styles.glassBadge}>

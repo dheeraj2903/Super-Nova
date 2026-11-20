@@ -53,7 +53,7 @@ export default function App() {
         onBuddyClick={() => setBuddyOpen(true)}
       />
 
-      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '32px 32px 96px' }}>
+      <main style={{ width: '100%', margin: '0 auto', padding: '32px 0 96px' }}>
         <Hero onBuddyClick={() => setBuddyOpen(true)} />
 
         <CategoryStrip

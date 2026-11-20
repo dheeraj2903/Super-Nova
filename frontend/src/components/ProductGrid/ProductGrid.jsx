@@ -101,7 +101,7 @@ export default function ProductGrid({ activeCategory, searchQuery, onAddToCart, 
               <span className={styles.liveDot}>• Live Feed</span>
             </h2>
             <p className={styles.subtitle}>
-              Selected archival objects, footwear, and devices available at seasonal valuations
+              Top-rated picks and limited-time price drops across tech &amp; everyday essentials
             </p>
           </div>
 
