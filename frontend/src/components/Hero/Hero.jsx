@@ -6,7 +6,7 @@ export default function Hero({ onBuddyClick }) {
   const ref = useRevealOnScroll(0.1);
 
   return (
-    <section className={styles.hero} ref={ref}>
+    <section className={`${styles.hero} container`} ref={ref}>
       <div className={styles.left}>
         <span className={styles.badge}>• SEASONAL EDIT • UP TO 50% OFF</span>
 
@@ -30,7 +30,7 @@ export default function Hero({ onBuddyClick }) {
         <div className={styles.trustStrip}>
           <span className={styles.trustItem}>
             <span className={styles.trustDot} />
-            480+ ATELIERS ACTIVE
+            500+ VERIFIED BRANDS
           </span>
           <span className={styles.trustItem}>
             <Zap size={12} strokeWidth={2.5} />
@@ -42,7 +42,7 @@ export default function Hero({ onBuddyClick }) {
       <div className={styles.right}>
         <img
           src="https://images.unsplash.com/photo-1705505185043-6ff5a09423d9?w=900&q=85&auto=format&fit=crop"
-          alt="Curated lifestyle essentials – matte-black headphones, analog watch, and minimal desk essentials on dark stone"
+          alt="Curated lifestyle essentials – matte-black headphones, analog watch, and leather desk accessories"
           className={styles.heroImage}
         />
         <div className={styles.glassBadge}>

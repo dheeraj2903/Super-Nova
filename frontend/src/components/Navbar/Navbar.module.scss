@@ -21,7 +21,7 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(250, 248, 245, 0.92);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid $border-subtle;
@@ -48,7 +48,7 @@
   font-family: $font-heading;
   font-size: 20px;
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: 0.06em;
   color: $text-primary;
   text-decoration: none;
   line-height: 1;
@@ -349,18 +349,18 @@
   margin-top: 14px;
   width: 100%;
   padding: 11px;
-  background: $text-primary;
-  color: $bg-canvas;
+  background: $accent-primary;
+  color: #FFFFFF;
   border: none;
   border-radius: $radius-md;
   font-family: $font-body;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.18s $ease-std;
 
   &:hover {
-    background: #2a2a2a;
+    background: $accent-primary-hover;
   }
 }
 
@@ -456,8 +456,8 @@
   right: -6px;
   min-width: 18px;
   height: 18px;
-  background: $text-primary;
-  color: $bg-canvas;
+  background: $accent-primary;
+  color: #FFFFFF;
   border-radius: $radius-pill;
   font-size: 10px;
   font-weight: 700;

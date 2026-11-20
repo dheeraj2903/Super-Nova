@@ -1,5 +1,12 @@
 @use 'variables' as *;
 
+// ─── Container ────────────────────────────────────────────────────────────────
+@mixin container {
+  max-width: $max-width;
+  width: 94%;
+  margin: 0 auto;
+}
+
 // ─── Responsive Breakpoints ───────────────────────────────────────────────────
 @mixin sm  { @media (max-width: 640px)  { @content; } }
 @mixin md  { @media (max-width: 768px)  { @content; } }

@@ -54,6 +54,13 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+// ── Global Layout Container ───────────────────────────────────────────────────
+.container {
+  max-width: $max-width;
+  width: 94%;
+  margin: 0 auto;
+}
+
 // ── Shimmer keyframe (global so skeletons work) ───────────────────────────────
 @keyframes shimmer {
   from { background-position: -200% 0; }

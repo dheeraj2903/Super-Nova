@@ -21,14 +21,14 @@ export default function AIBuddyDrawer({ isOpen, onClose, prefillQuery }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      text: 'Hello! I\'m KartIQ AI-Buddy. I can help you find the best deals, compare products, or answer any shopping questions. What\'re you looking for today?',
+      text: 'Hello! I\'m SUPERNOVA AI-Buddy. I can help you find the best deals, compare products, or answer any shopping questions. What\'re you looking for today?',
     },
   ]);
 
   const sendMessage = (text) => {
     if (!text.trim()) return;
     const userMsg = { role: 'user', text };
-    const reply = SAMPLE_RESPONSES[text] || `Great question! Searching KartIQ's catalog for "${text}"… I'll surface the best matches and pricing insights shortly. Meanwhile, check the **Trending & Hot Deals** section below for curated picks.`;
+    const reply = SAMPLE_RESPONSES[text] || `Great question! Searching SUPERNOVA's catalog for "${text}"… I'll surface the best matches and pricing insights shortly. Meanwhile, check the **Trending & Hot Deals** section below for curated picks.`;
     setMessages((prev) => [
       ...prev,
       userMsg,

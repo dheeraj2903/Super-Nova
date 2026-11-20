@@ -74,7 +74,7 @@
   right: 1px;
   width: 10px;
   height: 10px;
-  background: #22c55e;
+  background: #16A34A;
   border-radius: 50%;
   border: 2px solid $text-primary;
 }
@@ -204,9 +204,9 @@
   white-space: nowrap;
 
   &:hover {
-    background: $text-primary;
-    color: $bg-canvas;
-    border-color: $text-primary;
+    background: $accent-primary;
+    color: #FFFFFF;
+    border-color: $accent-primary;
   }
 }
 
@@ -239,7 +239,7 @@
   }
 
   &:focus {
-    border-color: $border-strong;
+    border-color: $accent-primary;
   }
 }
 
@@ -248,12 +248,16 @@
   width: 40px;
   height: 40px;
   @include flex-center;
-  background: $text-primary;
+  background: $accent-primary;
   border: none;
   border-radius: $radius-md;
   cursor: pointer;
-  color: $bg-canvas;
-  transition: opacity 0.15s, transform 0.15s;
+  color: #FFFFFF;
+  transition: background 0.15s, transform 0.15s;
+
+  &:hover:not(:disabled) {
+    background: $accent-primary-hover;
+  }
 
   &:disabled {
     opacity: 0.3;

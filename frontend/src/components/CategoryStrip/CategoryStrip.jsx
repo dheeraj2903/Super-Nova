@@ -7,7 +7,7 @@ export default function CategoryStrip({ activeCategory, onSelect }) {
   const ref = useRevealOnScroll(0.1);
 
   return (
-    <section className={styles.section} ref={ref}>
+    <section className={`${styles.section} container`} ref={ref}>
       <div className={styles.header}>
         <div>
           <h2 className={styles.title}>Shop by Category</h2>

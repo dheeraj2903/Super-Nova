@@ -49,7 +49,7 @@ export function useDebounce(value, delay = 320) {
 export function useWishlist() {
   const [wishlist, setWishlist] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('kartiq_wishlist') || '[]');
+      return JSON.parse(localStorage.getItem('supernova_wishlist') || localStorage.getItem('kartiq_wishlist') || '[]');
     } catch {
       return [];
     }
@@ -58,7 +58,7 @@ export function useWishlist() {
   const toggle = useCallback((id) => {
     setWishlist((prev) => {
       const next = prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id];
-      localStorage.setItem('kartiq_wishlist', JSON.stringify(next));
+      localStorage.setItem('supernova_wishlist', JSON.stringify(next));
       return next;
     });
   }, []);

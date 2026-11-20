@@ -92,7 +92,7 @@ export default function ProductGrid({ activeCategory, searchQuery, onAddToCart, 
 
   return (
     <>
-      <section id="shop-grid" className={styles.section} ref={sectionRef}>
+      <section id="shop-grid" className={`${styles.section} container`} ref={sectionRef}>
         {/* Header row */}
         <div className={styles.header}>
           <div>
@@ -101,7 +101,7 @@ export default function ProductGrid({ activeCategory, searchQuery, onAddToCart, 
               <span className={styles.liveDot}>• Live Feed</span>
             </h2>
             <p className={styles.subtitle}>
-              Top-rated picks and limited-time price drops across tech &amp; everyday essentials
+              Top-rated picks and limited-time deals across tech &amp; everyday essentials
             </p>
           </div>
 

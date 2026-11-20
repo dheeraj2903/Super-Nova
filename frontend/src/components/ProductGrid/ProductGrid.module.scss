@@ -126,8 +126,8 @@
   }
 
   &.filterActive {
-    background: $text-primary;
-    color: $bg-canvas;
+    background: $accent-primary;
+    color: #FFFFFF;
     font-weight: 600;
   }
 }
@@ -250,7 +250,13 @@
 
 .aiBtn {
   @include btn-solid;
+  background: $accent-primary;
+  color: #FFFFFF;
   padding: 12px 22px;
   font-size: 14px;
   border-radius: $radius-pill;
+
+  &:hover {
+    background: $accent-primary-hover;
+  }
 }

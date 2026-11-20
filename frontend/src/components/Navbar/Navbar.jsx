@@ -75,11 +75,11 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
       )}
 
       <header className={styles.navbar}>
-        <div className={styles.inner}>
+        <div className={`${styles.inner} container`}>
           {/* ── Left: Wordmark + Categories ── */}
           <div className={styles.left}>
             <a href="/" className={styles.wordmark}>
-              KartIQ<span className={styles.dot}>•</span>
+              SUPERNOVA<span className={styles.dot}>•</span>
             </a>
 
             <div className={styles.catWrapper} ref={catRef}>

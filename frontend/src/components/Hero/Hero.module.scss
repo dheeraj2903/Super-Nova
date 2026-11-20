@@ -10,8 +10,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   align-items: center;
-  background: #F4F4F2;
-  border: 1px solid #E5E7EB;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
   border-radius: $radius-xl;
   padding: 48px 52px 48px 56px;
   overflow: hidden;
@@ -73,12 +73,19 @@
 
 .ctaSolid {
   @include btn-solid;
+  background: $accent-primary;
+  color: #FFFFFF;
   padding: 13px 24px;
   font-size: 14px;
   font-weight: 600;
   border-radius: $radius-pill;
   gap: 8px;
   text-decoration: none;
+
+  &:hover {
+    background: $accent-primary-hover;
+    transform: translateY(-1px);
+  }
 }
 
 .ctaOutline {

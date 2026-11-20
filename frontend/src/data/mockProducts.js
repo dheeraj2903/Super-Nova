@@ -1,4 +1,4 @@
-// ─── Mock Product Data for KartIQ Storefront ─────────────────────────────────
+// ─── Mock Product Data for SUPERNOVA Storefront ─────────────────────────────────
 
 export const mockProducts = [
   {

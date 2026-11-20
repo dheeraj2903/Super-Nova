@@ -63,7 +63,7 @@
   flex-direction: column;
   gap: 0;
   background: $bg-surface;
-  border: 1.5px solid transparent;
+  border: 1.5px solid $border-subtle;
   border-radius: $radius-lg;
   overflow: hidden;
   cursor: pointer;
@@ -72,14 +72,14 @@
   transition: border-color 0.22s $ease-luxury, box-shadow 0.22s $ease-luxury, transform 0.22s $ease-luxury;
 
   &:hover {
-    border-color: $border-subtle;
+    border-color: $accent-primary;
     box-shadow: $shadow-card;
     transform: translateY(-2px);
   }
 
   &.active {
-    border-color: $border-strong;
-    box-shadow: 0 0 0 1px $border-strong;
+    border-color: $accent-primary;
+    box-shadow: 0 0 0 1px $accent-primary;
   }
 }
 

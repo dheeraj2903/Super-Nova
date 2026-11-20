@@ -2,7 +2,7 @@ import styles from './Footer.module.scss';
 
 const LINKS = {
   Shop: ['New Arrivals', 'Apparel & Living', 'Design Objects', 'Curated Deals'],
-  'Customer Service': ['Order Tracking', 'Shipping & Returns', 'Atelier Concierge', 'Help & FAQs'],
+  'Customer Service': ['Order Tracking', 'Shipping & Returns', '24/7 Support', 'Help & FAQs'],
   About: ['Our Story', 'Craftsmanship', 'Sustainability', 'Press & Editorial'],
   Legal: ['Privacy Policy', 'Terms of Service', 'Security Architecture', 'Cookie Settings'],
 };
@@ -10,11 +10,11 @@ const LINKS = {
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <div className={styles.inner}>
+      <div className={`${styles.inner} container`}>
         <div className={styles.top}>
           <div className={styles.brand}>
             <a href="/" className={styles.wordmark}>
-              KartIQ<span className={styles.dot}>•</span>
+              SUPERNOVA<span className={styles.dot}>•</span>
             </a>
             <p className={styles.tagline}>
               Quietly confident, refined lifestyle commerce designed for purposeful living and effortless catalog curation.
@@ -36,7 +36,7 @@ export default function Footer() {
         </div>
 
         <div className={styles.bottom}>
-          <span>© 2026 KartIQ Inc. All rights reserved.</span>
+          <span>© 2026 SUPERNOVA Inc. All rights reserved.</span>
         </div>
       </div>
     </footer>

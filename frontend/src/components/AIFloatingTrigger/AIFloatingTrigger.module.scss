@@ -34,17 +34,18 @@
   position: relative;
   width: 54px;
   height: 54px;
-  background: $text-primary;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #C46210;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   @include flex-center;
   cursor: pointer;
-  box-shadow: $shadow-float;
-  transition: transform 0.3s $ease-luxury, box-shadow 0.3s $ease-luxury;
+  box-shadow: 0 10px 25px rgba(196, 98, 16, 0.28);
+  transition: transform 0.3s $ease-luxury, box-shadow 0.3s $ease-luxury, background 0.2s $ease-std;
 
   &:hover {
+    background: #A8500A;
     transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 20px 44px -8px rgba(17, 17, 17, 0.28), 0 6px 16px -2px rgba(17, 17, 17, 0.14);
+    box-shadow: 0 14px 30px rgba(196, 98, 16, 0.38);
   }
 
   &:active {
@@ -54,7 +55,7 @@
 
 .sparkle {
   font-size: 22px;
-  color: $bg-canvas;
+  color: #FFFFFF;
   transition: transform 0.3s $ease-luxury;
   user-select: none;
   line-height: 1;
@@ -70,7 +71,7 @@
   right: 4px;
   width: 10px;
   height: 10px;
-  background: #22c55e;
+  background: #16A34A;
   border-radius: 50%;
-  border: 2px solid $text-primary;
+  border: 2px solid #FAF8F5;
 }

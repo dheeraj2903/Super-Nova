@@ -249,10 +249,17 @@
 
 .checkoutBtn {
   @include btn-solid;
+  background: $accent-primary;
+  color: #FFFFFF;
   width: 100%;
   padding: 14px;
   font-size: 14px;
   font-weight: 600;
   border-radius: $radius-md;
   margin-top: 4px;
+
+  &:hover {
+    background: $accent-primary-hover;
+    transform: translateY(-1px);
+  }
 }

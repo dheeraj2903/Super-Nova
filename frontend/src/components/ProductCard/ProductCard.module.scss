@@ -15,7 +15,7 @@
 
 .card {
   background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #E6E1D6;
   border-radius: $radius-lg;
   overflow: hidden;
   display: flex;
@@ -23,9 +23,9 @@
   transition: box-shadow 0.3s $ease-luxury, transform 0.3s $ease-luxury, border-color 0.3s $ease-luxury;
 
   &:hover {
-    box-shadow: 0 14px 30px rgba(17, 17, 17, 0.07);
+    box-shadow: 0 14px 30px rgba(24, 24, 27, 0.08);
     transform: translateY(-4px);
-    border-color: #E5E7EB;
+    border-color: #E6E1D6;
   }
 }
 
@@ -35,7 +35,7 @@
   width: 100%;
   height: 220px;
   overflow: hidden;
-  background: #F6F6F5;
+  background: #F4F1EA;
   flex-shrink: 0;
 }
 
@@ -64,8 +64,8 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background: $text-primary;
-  color: $bg-canvas;
+  background: #C46210;
+  color: #FFFFFF;
   font-family: $font-body;
   font-size: 11px;
   font-weight: 700;
@@ -123,9 +123,9 @@
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: $text-muted;
-  background: $bg-surface;
-  border: 1px solid $border-subtle;
+  color: #57534E;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
   border-radius: $radius-pill;
   padding: 3px 10px;
 }
@@ -187,16 +187,31 @@
 
 .cartBtn {
   @include btn-outline;
+  border: 1.5px solid #18181B;
+  color: #18181B;
   padding: 9px 10px;
   font-size: 12.5px;
   border-radius: $radius-md;
   gap: 5px;
+
+  &:hover {
+    background: #18181B;
+    color: #FFFFFF;
+    border-color: #18181B;
+  }
 }
 
 .buyBtn {
   @include btn-solid;
+  background: #C46210;
+  color: #FFFFFF;
   padding: 9px 10px;
   font-size: 12.5px;
   border-radius: $radius-md;
   gap: 5px;
+
+  &:hover {
+    background: #A8500A;
+    transform: translateY(-1px);
+  }
 }
