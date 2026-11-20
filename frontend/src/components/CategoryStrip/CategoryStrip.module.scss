@@ -38,10 +38,12 @@
   cursor: pointer;
   flex-shrink: 0;
   padding: 6px 0;
+  text-decoration: none;
   transition: gap 0.2s $ease-luxury;
 
   &:hover {
     gap: 8px;
+    color: $text-primary;
   }
 }
 
@@ -71,6 +73,8 @@
   cursor: pointer;
   text-align: left;
   padding: 0;
+  text-decoration: none;
+  color: inherit;
   transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:hover {

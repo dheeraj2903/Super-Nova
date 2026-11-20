@@ -1,0 +1,718 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.page {
+  max-width: $max-width;
+  width: 94%;
+  margin: 0 auto;
+  padding: 24px 0 64px;
+}
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────────
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-body;
+  font-size: 13px;
+  color: $text-muted;
+  margin-bottom: 18px;
+
+  a {
+    color: $text-secondary;
+    text-decoration: none;
+    transition: color 0.15s;
+
+    &:hover {
+      color: #C46210;
+    }
+  }
+
+  .current {
+    color: $text-primary;
+    font-weight: 500;
+  }
+}
+
+.crumbSep {
+  color: #A8A29E;
+  display: flex;
+  align-items: center;
+}
+
+// ── Header Row ────────────────────────────────────────────────────────────────
+.headerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #E6E1D6;
+  margin-bottom: 20px;
+}
+
+.titleArea {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-family: $font-heading;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: $text-primary;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.countBadge {
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 500;
+  color: #57534E;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
+  padding: 4px 12px;
+  border-radius: $radius-pill;
+}
+
+.controlsArea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// Mobile Filter Button (< 900px)
+.filterToggleBtn {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 16px;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: $text-primary;
+  cursor: pointer;
+  transition: all 0.2s $ease-luxury;
+
+  &:hover {
+    background: #EAE5DC;
+  }
+
+  @media (max-width: 900px) {
+    display: inline-flex;
+  }
+}
+
+.filterBadge {
+  background: #C46210;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Sort dropdown
+.sortWrap {
+  position: relative;
+}
+
+.sortBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: $text-primary;
+  cursor: pointer;
+  transition: all 0.2s $ease-luxury;
+
+  &:hover {
+    border-color: #D4CEBF;
+  }
+}
+
+.sortLabel {
+  color: $text-muted;
+}
+
+.sortVal {
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.sortDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 190px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(24, 24, 27, 0.08);
+  padding: 6px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sortOption {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: 13px;
+  color: $text-secondary;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+
+  &:hover {
+    background: #F2EFE9;
+    color: $text-primary;
+  }
+
+  &.sortActive {
+    background: #F2EFE9;
+    color: #C46210;
+    font-weight: 600;
+  }
+}
+
+// ── Active Filter Chips ───────────────────────────────────────────────────────
+.activeChipsBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding: 4px 0;
+}
+
+.chipsLabel {
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-pill;
+  padding: 4px 12px;
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: $text-primary;
+}
+
+.chipRemove {
+  background: none;
+  border: none;
+  color: #78716C;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  line-height: 1;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #C46210;
+  }
+}
+
+.clearAllBtn {
+  background: none;
+  border: none;
+  color: #C46210;
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  text-decoration: underline;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// ── Main Two-Column Layout ────────────────────────────────────────────────────
+.layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+// ── Left Sticky Sidebar ───────────────────────────────────────────────────────
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 90px;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #E6E1D6;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 900px) {
+    display: none; // Hidden on mobile; rendered inside mobile drawer
+  }
+}
+
+.filterSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitle {
+  font-family: $font-heading;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $text-primary;
+  margin: 0;
+}
+
+// Categories list
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.categoryBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #57534E;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s $ease-luxury;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.6);
+    color: $text-primary;
+  }
+
+  &.catActive {
+    background: #18181B;
+    color: #FFFFFF;
+    font-weight: 600;
+
+    .catCount {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+.catCount {
+  font-size: 12px;
+  color: #78716C;
+  font-weight: 400;
+}
+
+// Price Range
+.priceInputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priceField {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currencyPrefix {
+  position: absolute;
+  left: 10px;
+  font-family: $font-body;
+  font-size: 12.5px;
+  color: #78716C;
+  pointer-events: none;
+}
+
+.priceInput {
+  width: 100%;
+  height: 38px;
+  padding: 0 8px 0 24px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: 13px;
+  color: $text-primary;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &:focus {
+    border-color: #C46210;
+  }
+
+  &::placeholder {
+    color: #A8A29E;
+  }
+}
+
+.priceSep {
+  color: #A8A29E;
+  font-size: 12px;
+}
+
+.applyPriceBtn {
+  height: 36px;
+  padding: 0 14px;
+  background: #FFFFFF;
+  border: 1px solid #D4CEBF;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: $text-primary;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+
+  &:hover {
+    background: #18181B;
+    color: #FFFFFF;
+    border-color: #18181B;
+  }
+}
+
+// Rating radios
+.ratingList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ratingOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-body;
+  font-size: 13px;
+  color: $text-secondary;
+  cursor: pointer;
+  user-select: none;
+
+  input {
+    accent-color: #C46210;
+    cursor: pointer;
+  }
+
+  &:hover {
+    color: $text-primary;
+  }
+}
+
+// Reset button
+.resetBtn {
+  width: 100%;
+  height: 40px;
+  background: transparent;
+  border: 1px dashed #D4CEBF;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 600;
+  color: #78716C;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #C46210;
+    color: #C46210;
+    background: rgba(196, 98, 16, 0.05);
+  }
+}
+
+// ── Mobile Filter Drawer ──────────────────────────────────────────────────────
+.mobileOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 70;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.mobileDrawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(340px, 85vw);
+  background: #FAF8F5;
+  z-index: 71;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+  animation: slideInLeft 0.25s $ease-luxury;
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+.mobileDrawerHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: #F2EFE9;
+  border-bottom: 1px solid #E6E1D6;
+
+  h3 {
+    margin: 0;
+    font-family: $font-heading;
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.mobileCloseBtn {
+  background: none;
+  border: none;
+  color: $text-secondary;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: $text-primary;
+  }
+}
+
+.mobileDrawerBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mobileDrawerFoot {
+  padding: 16px 24px;
+  border-top: 1px solid #E6E1D6;
+  background: #F2EFE9;
+}
+
+.mobileApplyBtn {
+  width: 100%;
+  height: 44px;
+  background: #C46210;
+  color: #FFFFFF;
+  border: none;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #A8500A;
+  }
+}
+
+// ── Right Product Grid ────────────────────────────────────────────────────────
+.gridArea {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+// Empty state
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 20px;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
+  border-radius: 16px;
+  gap: 16px;
+}
+
+.emptyIcon {
+  color: #A8A29E;
+}
+
+.emptyTitle {
+  font-family: $font-heading;
+  font-size: 20px;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0;
+}
+
+.emptyDesc {
+  font-family: $font-body;
+  font-size: 14px;
+  color: $text-muted;
+  max-width: 380px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.emptyResetBtn {
+  height: 40px;
+  padding: 0 22px;
+  background: #C46210;
+  color: #FFFFFF;
+  border: none;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #A8500A;
+  }
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────────
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 16px;
+  margin-top: auto;
+}
+
+.pageBtn {
+  height: 38px;
+  padding: 0 16px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-primary;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    border-color: #D4CEBF;
+    background: #F2EFE9;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.pageNum {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #E6E1D6;
+  background: #FFFFFF;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #D4CEBF;
+    background: #F2EFE9;
+  }
+
+  &.pageActive {
+    background: #C46210;
+    border-color: #C46210;
+    color: #FFFFFF;
+  }
+}

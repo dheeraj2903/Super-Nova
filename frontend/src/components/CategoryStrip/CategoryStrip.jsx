@@ -27,9 +27,9 @@ export default function CategoryStrip({ activeCategory, onSelect, loading: propL
             <h2 className={styles.title}>Shop by Category</h2>
             <p className={styles.subtitle}>Curated essentials across everyday tech &amp; lifestyle</p>
           </div>
-          <button className={styles.viewAll}>
+          <a href="/products" className={styles.viewAll}>
             View All (6) <ChevronRight size={15} strokeWidth={2} />
-          </button>
+          </a>
         </div>
 
         <div className={styles.grid}>
@@ -54,19 +54,20 @@ export default function CategoryStrip({ activeCategory, onSelect, loading: propL
           <h2 className={styles.title}>Shop by Category</h2>
           <p className={styles.subtitle}>Curated essentials across everyday tech &amp; lifestyle</p>
         </div>
-        <button className={styles.viewAll}>
+        <a href="/products" className={styles.viewAll}>
           View All (6) <ChevronRight size={15} strokeWidth={2} />
-        </button>
+        </a>
       </div>
 
       <div className={styles.grid}>
         {categories.map((cat, i) => {
           const isActive = activeCategory === cat.name;
           return (
-            <button
+            <a
               key={cat.id}
+              href={`/products?category=${cat.id}`}
               className={`${styles.card} ${isActive ? styles.active : ''}`}
-              onClick={() => onSelect(cat.name)}
+              onClick={() => onSelect?.(cat.name)}
               style={{ animationDelay: `${i * 55}ms` }}
             >
               <div className={styles.imgWrap}>
@@ -76,7 +77,7 @@ export default function CategoryStrip({ activeCategory, onSelect, loading: propL
                 <span className={styles.name}>{cat.name}</span>
                 <span className={styles.count}>{cat.count} Items</span>
               </div>
-            </button>
+            </a>
           );
         })}
       </div>

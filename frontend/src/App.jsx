@@ -8,11 +8,18 @@ import Footer from './components/Footer/Footer';
 import CartDrawer from './components/CartDrawer/CartDrawer';
 import AIBuddyDrawer from './components/AIBuddyDrawer/AIBuddyDrawer';
 import AIFloatingTrigger from './components/AIFloatingTrigger/AIFloatingTrigger';
+import ProductsPage from './pages/ProductsPage';
 import SVGDefs from './components/SVGDefs';
 import './styles/global.scss';
 
 export default function App() {
   /* ── Global UI state ── */
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname || '/';
+    }
+    return '/';
+  });
   const [pageLoading, setPageLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [buddyOpen, setBuddyOpen] = useState(false);
@@ -23,6 +30,40 @@ export default function App() {
   useEffect(() => {
     const timer = setTimeout(() => setPageLoading(false), 550);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Listen to popstate (back/forward navigation)
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname || '/');
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  // Client-side link navigation interceptor
+  useEffect(() => {
+    const handleLinkClick = (e) => {
+      const anchor = e.target.closest('a');
+      if (
+        anchor &&
+        anchor.href &&
+        anchor.target !== '_blank' &&
+        anchor.origin === window.location.origin &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        !e.shiftKey &&
+        !e.defaultPrevented
+      ) {
+        const url = new URL(anchor.href);
+        e.preventDefault();
+        window.history.pushState({}, '', url.pathname + url.search + url.hash);
+        setCurrentPath(url.pathname);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    document.addEventListener('click', handleLinkClick);
+    return () => document.removeEventListener('click', handleLinkClick);
   }, []);
 
   /* ── Cart helpers ── */
@@ -59,24 +100,34 @@ export default function App() {
         onBuddyClick={() => setBuddyOpen(true)}
       />
 
-      <main style={{ width: '100%', margin: '0 auto', padding: '32px 0 0' }}>
-        <Hero loading={pageLoading} onBuddyClick={() => setBuddyOpen(true)} />
+      {currentPath.startsWith('/products') ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <ProductsPage
+            searchQuery={searchQuery}
+            onAddToCart={addToCart}
+            onBuddyClick={() => setBuddyOpen(true)}
+          />
+        </main>
+      ) : (
+        <main style={{ width: '100%', margin: '0 auto', padding: '32px 0 0' }}>
+          <Hero loading={pageLoading} onBuddyClick={() => setBuddyOpen(true)} />
 
-        <CategoryStrip
-          loading={pageLoading}
-          activeCategory={activeCategory}
-          onSelect={handleCategorySelect}
-        />
+          <CategoryStrip
+            loading={pageLoading}
+            activeCategory={activeCategory}
+            onSelect={handleCategorySelect}
+          />
 
-        <ProductGrid
-          activeCategory={activeCategory}
-          searchQuery={searchQuery}
-          onAddToCart={addToCart}
-          onBuddyClick={() => setBuddyOpen(true)}
-        />
+          <ProductGrid
+            activeCategory={activeCategory}
+            searchQuery={searchQuery}
+            onAddToCart={addToCart}
+            onBuddyClick={() => setBuddyOpen(true)}
+          />
 
-        <TrustStrip />
-      </main>
+          <TrustStrip />
+        </main>
+      )}
 
       <Footer />
 

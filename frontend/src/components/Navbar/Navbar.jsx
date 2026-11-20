@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, User, ChevronDown, Zap, X } from 'lucide-react';
+import { Search, ShoppingCart, X } from 'lucide-react';
 import { mockProducts, categories } from '../../data/mockProducts';
 import { useDebounce } from '../../hooks/useStorefront';
 import styles from './Navbar.module.scss';
@@ -7,8 +7,12 @@ import styles from './Navbar.module.scss';
 export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch, searchQuery }) {
   const [searchFocused, setSearchFocused] = useState(false);
   const [localQuery, setLocalQuery] = useState('');
-  const [catOpen, setCatOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname || '/';
+    }
+    return '/';
+  });
   const [isCompactSearch, setIsCompactSearch] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth < 1100;
@@ -17,8 +21,26 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
   });
   const debouncedQuery = useDebounce(localQuery, 280);
   const searchRef = useRef(null);
-  const catRef = useRef(null);
-  const accountRef = useRef(null);
+
+  // Sync current path on popstate
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname || '/');
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  const isActiveRoute = (path) => {
+    if (path === '/') {
+      return currentPath === '/' || currentPath === '';
+    }
+    return (
+      currentPath === path ||
+      currentPath.startsWith(path + '/') ||
+      currentPath.startsWith(path + '?')
+    );
+  };
 
   // Responsive placeholder
   useEffect(() => {
@@ -40,12 +62,6 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
       if (searchRef.current && !searchRef.current.contains(e.target)) {
         setSearchFocused(false);
       }
-      if (catRef.current && !catRef.current.contains(e.target)) {
-        setCatOpen(false);
-      }
-      if (accountRef.current && !accountRef.current.contains(e.target)) {
-        setAccountOpen(false);
-      }
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -56,8 +72,6 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
     function handleKey(e) {
       if (e.key === 'Escape') {
         setSearchFocused(false);
-        setCatOpen(false);
-        setAccountOpen(false);
       }
     }
     document.addEventListener('keydown', handleKey);
@@ -74,11 +88,6 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
 
   const trendingPills = ['Headphones', 'Running Shoes', 'GaN Charger', 'Smart Watch', 'Leather Bag'];
 
-  const scrollToDeals = () => {
-    const el = document.getElementById('shop-grid');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
   return (
     <>
       {/* Backdrop when search is focused */}
@@ -91,42 +100,11 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
 
       <header className={styles.navbar}>
         <div className={`${styles.inner} container`}>
-          {/* ── Left: Wordmark + Categories ── */}
+          {/* ── Left: Wordmark ── */}
           <div className={styles.left}>
             <a href="/" className={styles.wordmark}>
               SUPERNOVA<span className={styles.dot}>.</span>
             </a>
-
-            <div className={styles.catWrapper} ref={catRef}>
-              <button
-                className={styles.catBtn}
-                onClick={() => setCatOpen((o) => !o)}
-                aria-expanded={catOpen}
-              >
-                Categories
-                <ChevronDown size={14} strokeWidth={2} className={catOpen ? styles.chevronOpen : ''} />
-              </button>
-
-              {catOpen && (
-                <div className={styles.catDropdown}>
-                  {categories.map((c) => (
-                    <button
-                      key={c.id}
-                      className={styles.catItem}
-                      onClick={() => {
-                        setCatOpen(false);
-                        const el = document.getElementById('shop-grid');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                    >
-                      <img src={c.image} alt={c.name} className={styles.catItemImg} />
-                      <span>{c.name}</span>
-                      <span className={styles.catCount}>{c.count}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
           {/* ── Center: Search ── */}
@@ -212,30 +190,28 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
             )}
           </div>
 
-          {/* ── Right: Nav actions ── */}
-          <nav className={styles.right}>
-            <button className={styles.navLink} onClick={scrollToDeals}>Deals</button>
+          {/* ── Right: Clean 3 Nav Links + Cart ── */}
+          <nav className={styles.right} aria-label="Main navigation">
+            <a
+              href="/"
+              className={`${styles.navLink} ${isActiveRoute('/') ? styles.navLinkActive : ''}`}
+            >
+              Home
+            </a>
+            <a
+              href="/products"
+              className={`${styles.navLink} ${isActiveRoute('/products') ? styles.navLinkActive : ''}`}
+            >
+              Products
+            </a>
+            <a
+              href="/deals"
+              className={`${styles.navLink} ${isActiveRoute('/deals') ? styles.navLinkActive : ''}`}
+            >
+              Deals
+            </a>
 
-            {/* Account dropdown */}
-            <div className={styles.accountWrap} ref={accountRef}>
-              <button
-                className={styles.navLink}
-                onClick={() => setAccountOpen((o) => !o)}
-              >
-                <User size={15} strokeWidth={2} />
-                Account
-                <ChevronDown size={13} strokeWidth={2} className={accountOpen ? styles.chevronOpen : ''} />
-              </button>
-              {accountOpen && (
-                <div className={styles.accountDropdown}>
-                  {['My Orders & Live Tracking', 'Wishlist', 'Partner Dashboard', 'Login / Logout'].map((item) => (
-                    <button key={item} className={styles.accountItem}>{item}</button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <button className={styles.cartBtn} onClick={onCartClick}>
+            <button className={styles.cartBtn} onClick={onCartClick} aria-label="Open cart">
               <ShoppingCart size={15} strokeWidth={2} />
               Cart
               {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
