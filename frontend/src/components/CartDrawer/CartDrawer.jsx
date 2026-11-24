@@ -1,16 +1,14 @@
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
 import styles from './CartDrawer.module.scss';
 
-export default function CartDrawer({ isOpen, onClose, items, setItems }) {
-  const updateQty = (id, delta) => {
-    setItems((prev) =>
-      prev
-        .map((item) => (item._id === id ? { ...item, qty: item.qty + delta } : item))
-        .filter((item) => item.qty > 0)
-    );
-  };
+export default function CartDrawer({ isOpen, onClose, items, setItems, onCheckout }) {
+  const cartContext = useCart();
+  const currentItems = items || cartContext.cartItems;
+  const updateQty = cartContext.updateQty;
+  const proceedToCheckout = onCheckout || cartContext.proceedToCheckout;
 
-  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const subtotal = currentItems.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
 
   return (
     <>
@@ -32,7 +30,7 @@ export default function CartDrawer({ isOpen, onClose, items, setItems }) {
         <div className={styles.head}>
           <div>
             <h2 className={styles.title}>Your Cart</h2>
-            <p className={styles.count}>{items.length} {items.length === 1 ? 'item' : 'items'}</p>
+            <p className={styles.count}>{currentItems.length} {currentItems.length === 1 ? 'item' : 'items'}</p>
           </div>
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close cart">
             <X size={18} strokeWidth={2} />
@@ -40,7 +38,7 @@ export default function CartDrawer({ isOpen, onClose, items, setItems }) {
         </div>
 
         <div className={styles.body}>
-          {items.length === 0 ? (
+          {currentItems.length === 0 ? (
             <div className={styles.empty}>
               <ShoppingBag size={40} strokeWidth={1.5} className={styles.emptyIcon} />
               <p>Your cart is empty</p>
@@ -48,7 +46,7 @@ export default function CartDrawer({ isOpen, onClose, items, setItems }) {
             </div>
           ) : (
             <ul className={styles.list}>
-              {items.map((item) => (
+              {currentItems.map((item) => (
                 <li key={item._id} className={styles.item}>
                   <img src={item.image} alt={item.title} className={styles.itemImg} />
                   <div className={styles.itemInfo}>
@@ -83,14 +81,14 @@ export default function CartDrawer({ isOpen, onClose, items, setItems }) {
           )}
         </div>
 
-        {items.length > 0 && (
+        {currentItems.length > 0 && (
           <div className={styles.foot}>
             <div className={styles.subtotalRow}>
               <span>Subtotal</span>
               <span className={styles.subtotal}>₹{subtotal.toLocaleString('en-IN')}</span>
             </div>
-            <p className={styles.shippingNote}>Shipping and taxes calculated at checkout</p>
-            <button className={styles.checkoutBtn}>
+            <p className={styles.shippingNote}>Complimentary carbon-neutral express courier</p>
+            <button className={styles.checkoutBtn} onClick={proceedToCheckout}>
               Proceed to Checkout →
             </button>
           </div>

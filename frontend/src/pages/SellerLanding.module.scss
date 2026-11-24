@@ -1,0 +1,719 @@
+@use '../styles/variables' as *;
+
+.sellerLandingPage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FAF8F5;
+  color: #18181B;
+  overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+// ── 1. Top Minimal Sticky Navbar ──────────────────────────────────────────────
+.stickyNav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: rgba(250, 248, 245, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid #E7E3DC;
+}
+
+.navInner {
+  max-width: 1200px;
+  height: 68px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.brandWordmark {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #18181B;
+}
+
+.sellerBadge {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #52525B;
+  background: #FFFFFF;
+  border: 1px solid #E7E3DC;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.signInLink {
+  font-size: 14px;
+  font-weight: 600;
+  color: #18181B;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(24, 24, 27, 0.05);
+    color: #000000;
+  }
+}
+
+.startStoreBtn {
+  background-color: #18181B;
+  color: #FFFFFF;
+  border: 1px solid #18181B;
+  border-radius: 9999px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background-color: #27272A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 24, 27, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ── 2. Full-Viewport Light Hero with 60fps Diagonal Moving Collage ────────────
+.heroSection {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 68px);
+  min-height: 640px;
+  max-height: 980px;
+  overflow: hidden;
+  background-color: #FAF8F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diagonalCollageWrapper {
+  position: absolute;
+  inset: -60% -30%;
+  transform: rotate(-18deg) scale(1.18);
+  transform-origin: center center;
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #FAF8F5;
+}
+
+.collageColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 250px;
+  flex-shrink: 0;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+
+  &.colUp {
+    animation: loopUp 40s linear infinite;
+  }
+
+  &.colDown {
+    animation: loopDown 40s linear infinite;
+  }
+}
+
+@keyframes loopUp {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+@keyframes loopDown {
+  0% {
+    transform: translate3d(0, -50%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.collageCard {
+  background: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+  border: 1px solid rgba(231, 227, 220, 0.85);
+  flex-shrink: 0;
+}
+
+.cardImage {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+// Center Floating Dark Card
+.centerCardContainer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 540px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.floatingDarkCard {
+  background-color: #18181B;
+  border-radius: 24px;
+  padding: 40px 44px;
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.38), 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (max-width: 640px) {
+    padding: 32px 24px;
+  }
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.freeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #E4E4E7;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.greenPulseDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.85);
+}
+
+.cardHeadline {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: #FFFFFF;
+  margin: 12px 0 10px;
+
+  @media (max-width: 640px) {
+    font-size: 26px;
+  }
+}
+
+.cardSubtitle {
+  font-size: 15px;
+  color: #A1A1AA;
+  line-height: 1.5;
+  margin: 0 0 26px;
+  max-width: 420px;
+
+  @media (max-width: 640px) {
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+}
+
+// Email Quick-Start Dark-Glass Pill Bar
+.heroPillBar {
+  width: 100%;
+  max-width: 440px;
+  margin: 6px 0 24px;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  padding: 5px 6px 5px 20px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+  &:focus-within {
+    border-color: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+  }
+}
+
+.heroEmailInput {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #FFFFFF;
+  padding: 8px 6px 8px 0;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 14px;
+  }
+}
+
+.heroArrowBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #18181B;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+
+  &:hover {
+    background: #F4F4F5;
+    transform: scale(1.06);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.cardFooterNote {
+  font-size: 12px;
+  color: #A1A1AA;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+// ── 3. Section 2 & 3 Editorial Sections ───────────────────────────────────────
+.editorialSection {
+  background-color: #FAF8F5;
+  border-top: 1px solid #E7E3DC;
+  padding: 88px 24px 96px;
+}
+
+.featuresContainer {
+  max-width: 1120px;
+  margin: 0 auto 104px;
+}
+
+.sectionHeaderWrap {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 48px;
+}
+
+.sectionEyebrow {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #C46210;
+  margin-bottom: 8px;
+}
+
+.sectionTitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #18181B;
+  line-height: 1.22;
+  margin: 0 0 10px;
+
+  @media (max-width: 640px) {
+    font-size: 28px;
+  }
+}
+
+.sectionSubtitle {
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: #57534E;
+  margin: 0;
+}
+
+// Clean 3-Column Feature Grid (max-width: 1120px, crisp #FFFFFF cards, subtle #E7E3DC borders)
+.threeColFeaturesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1120px;
+  margin: 0 auto;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.featureGridCard {
+  background: #FFFFFF;
+  border: 1px solid #E7E3DC;
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.07);
+    border-color: #D6D0C5;
+  }
+}
+
+.featureIconWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #FDF8F3;
+  border: 1px solid rgba(196, 98, 16, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.featureIcon {
+  color: #C46210;
+}
+
+.featureGridHeading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #18181B;
+  margin: 0 0 10px;
+  line-height: 1.3;
+}
+
+.featureGridDesc {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #57534E;
+  margin: 0 0 20px;
+  flex: 1;
+}
+
+.featurePillTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #C46210;
+  background: #FAF8F5;
+  border: 1px solid #E7E3DC;
+  padding: 4px 10px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+// ── 4. Section 3: Start Selling in 3 Steps + Bottom CTA ───────────────────────
+.stepsContainer {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.stepsHeader {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 48px;
+}
+
+.stepsTitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #18181B;
+  margin: 0 0 10px;
+
+  @media (max-width: 640px) {
+    font-size: 28px;
+  }
+}
+
+.stepsSubtitle {
+  font-size: 16px;
+  color: #57534E;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 64px;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.stepCard {
+  background: #FFFFFF;
+  border: 1px solid #E7E3DC;
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+    border-color: #D6D0C5;
+  }
+}
+
+.stepNumberBadge {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #C46210;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+
+.stepCardTitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #18181B;
+  margin: 0 0 10px;
+  line-height: 1.3;
+}
+
+.stepCardDesc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #57534E;
+  margin: 0;
+  flex: 1;
+}
+
+// Editorial Bottom Banner
+.ctaBannerContainer {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.ctaBanner {
+  background: #FFFFFF;
+  border: 1px solid #E7E3DC;
+  border-radius: 24px;
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+    padding: 36px 24px;
+  }
+}
+
+.ctaLeft {
+  max-width: 580px;
+}
+
+.ctaEyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #C46210;
+  margin-bottom: 8px;
+}
+
+.ctaTitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #18181B;
+  margin: 0 0 8px;
+
+  @media (max-width: 640px) {
+    font-size: 22px;
+  }
+}
+
+.ctaSubtitle {
+  font-size: 15px;
+  color: #57534E;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bannerStartBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #18181B;
+  color: #FFFFFF;
+  border: 1px solid #18181B;
+  border-radius: 9999px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #27272A;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(24, 24, 27, 0.16);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ── Footer ───────────────────────────────────────────────────────────────────
+.lightFooter {
+  background-color: #FFFFFF;
+  border-top: 1px solid #E7E3DC;
+  padding: 36px 24px;
+}
+
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+}
+
+.footerLogo {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #18181B;
+}
+
+.footerCopy {
+  font-size: 13px;
+  color: #71717A;
+}
+
+.footerLinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  a {
+    font-size: 13px;
+    color: #52525B;
+    text-decoration: none;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: #18181B;
+    }
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+}

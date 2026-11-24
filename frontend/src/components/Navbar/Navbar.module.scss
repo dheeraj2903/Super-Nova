@@ -343,10 +343,34 @@
   padding: 8px;
   border-radius: $radius-md;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
   transition: background 0.15s;
 
   &:hover {
     background: $bg-surface;
+  }
+}
+
+.viewAllSearch {
+  display: block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #C46210;
+  text-decoration: none;
+  border-radius: $radius-md;
+  background: rgba(196, 98, 16, 0.05);
+  border: 1px solid rgba(196, 98, 16, 0.15);
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #C46210;
+    color: #FFFFFF;
+    border-color: #C46210;
   }
 }
 
@@ -478,6 +502,72 @@
   }
 }
 
+// ── Logged Out Sign In Pill ───────────────────────────────────────────────────
+.signInPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  background-color: #18181B;
+  color: #FFFFFF;
+  font-family: $font-body;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: $radius-pill;
+  text-decoration: none;
+  transition: all 0.2s $ease-luxury;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #27272A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 24, 27, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ── User Avatar Badge with Initial & Chevron ──────────────────────────────────
+.userAvatarBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 4px;
+  border-radius: $radius-pill;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
+  cursor: pointer;
+  transition: all 0.2s $ease-luxury;
+
+  &:hover,
+  &.avatarActive {
+    background: #EBE6DC;
+    border-color: #D6CEBE;
+  }
+}
+
+.avatarInitial {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #18181B;
+  color: #FFFFFF;
+  font-family: $font-heading;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.avatarChevron {
+  color: #57534E;
+  transition: transform 0.2s $ease-luxury;
+}
+
 .accountWrap {
   position: relative;
   display: flex;
@@ -488,49 +578,184 @@
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  min-width: 215px;
-  background: $bg-canvas;
-  border: 1px solid $border-subtle;
-  border-radius: $radius-lg;
-  box-shadow: $shadow-float;
-  padding: 8px;
+  width: 240px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 14px;
+  box-shadow: 0 16px 36px -8px rgba(24, 24, 27, 0.12), 0 4px 12px -2px rgba(24, 24, 27, 0.05);
+  padding: 10px;
   z-index: 50;
   animation: dropIn 0.22s $ease-luxury;
+  box-sizing: border-box;
+}
+
+.accountHeader {
+  padding: 4px 6px 10px;
+  border-bottom: 1px solid #E6E1D6;
+  margin-bottom: 6px;
+}
+
+.accountNameRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.accountFullName {
+  font-family: $font-heading;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #18181B;
+  @include line-clamp(1);
+}
+
+.accountUsername {
+  font-family: $font-body;
+  font-size: 11.5px;
+  color: #71717A;
+  margin-top: 1px;
+}
+
+.roleBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: $radius-pill;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+
+  &.roleCustomer {
+    background: rgba(196, 98, 16, 0.12);
+    color: #C46210;
+    border: 1px solid rgba(196, 98, 16, 0.25);
+  }
+
+  &.roleSeller {
+    background: #18181B;
+    color: #FFFFFF;
+  }
+
+  &.roleAdmin {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+}
+
+.dropdownSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sectionLabel {
+  font-family: $font-body;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #8E8A84;
+  padding: 6px 8px 2px;
 }
 
 .accountItem {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   text-align: left;
-  padding: 9px 12px;
+  padding: 8px 10px;
   background: none;
   border: none;
-  border-radius: $radius-md;
+  border-radius: $radius-sm;
   font-family: $font-body;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 500;
   color: $text-primary;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background-color 0.15s, color 0.15s;
 
   &:hover {
-    background: $bg-surface;
-    color: $text-primary;
+    background: #F7F5F0;
+    color: #C46210;
   }
 }
 
-.accountHighlight {
-  color: #C46210 !important;
+.dropdownDivider {
+  height: 1px;
+  background: #E6E1D6;
+  margin: 6px 0;
+}
+
+.signOutBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  border-radius: $radius-sm;
+  font-family: $font-body;
+  font-size: 13px;
   font-weight: 600;
-  border-bottom: 1px solid #E6E1D6;
-  margin-bottom: 4px;
-  padding-bottom: 10px;
+  color: #DC2626;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s;
 
   &:hover {
-    color: #A8500A !important;
-    background: rgba(196, 98, 16, 0.06);
+    background: #FEF2F2;
   }
+}
+
+// ── Clean Icon-Only Cart Trigger with Burnt Bronze Badge ──────────────────────
+.cartIconBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: none;
+  border: none;
+  color: #18181B;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  transition: color 0.18s, background-color 0.18s;
+
+  &:hover {
+    color: #C46210;
+    background-color: rgba(24, 24, 27, 0.04);
+  }
+}
+
+.cartBadge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: $radius-pill;
+  background: #C46210;
+  color: #FFFFFF;
+  font-family: $font-body;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(196, 98, 16, 0.4);
+  border: 1.5px solid #FAF8F5;
+  box-sizing: border-box;
 }
 
 .cartBtn {

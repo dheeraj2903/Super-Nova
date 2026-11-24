@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
 import CategoryStrip from './components/CategoryStrip/CategoryStrip';
@@ -9,12 +9,71 @@ import CartDrawer from './components/CartDrawer/CartDrawer';
 import AIBuddyDrawer from './components/AIBuddyDrawer/AIBuddyDrawer';
 import AIFloatingTrigger from './components/AIFloatingTrigger/AIFloatingTrigger';
 import ProductsPage from './pages/ProductsPage';
+import ProductDetail from './pages/ProductDetail';
+import Deals from './pages/Deals';
+import AuthPage from './pages/AuthPage';
+import Toast from './components/Toast/Toast';
 import SVGDefs from './components/SVGDefs';
+import { AuthProvider } from './context/AuthContext';
+import { CartProvider, useCart } from './context/CartContext';
 import { GLOBAL_SKELETON_MS } from './constants/ui';
 import './styles/global.scss';
 import './index.scss';
 
-export default function App() {
+// Lazy-loaded secondary routes for faster initial dev & storefront bundle load
+const SellerLanding = lazy(() => import('./pages/SellerLanding'));
+const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
+const OrdersPage = lazy(() => import('./pages/OrdersPage'));
+const OrderDetailPage = lazy(() => import('./pages/OrderDetailPage'));
+const DashboardView = lazy(() => import('./pages/DashboardView'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+
+function RouteLoadingFallback() {
+  return (
+    <div
+      style={{
+        minHeight: '65vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '80px 20px',
+      }}
+    >
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 12,
+          padding: '12px 24px',
+          background: '#FFFFFF',
+          border: '1px solid #E6E1D6',
+          borderRadius: 9999,
+          boxShadow: '0 4px 16px rgba(24, 24, 27, 0.04)',
+          color: '#57534E',
+          fontSize: 13,
+          fontWeight: 600,
+        }}
+      >
+        <span
+          style={{
+            width: 16,
+            height: 16,
+            border: '2px solid rgba(196, 98, 16, 0.2)',
+            borderTopColor: '#C46210',
+            borderRadius: '50%',
+            display: 'inline-block',
+            animation: 'spin 0.75s linear infinite',
+          }}
+        />
+        <span>Loading Supernova Studio...</span>
+      </div>
+    </div>
+  );
+}
+
+function AppContent() {
   /* ── Global UI state ── */
   const [currentPath, setCurrentPath] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -23,11 +82,33 @@ export default function App() {
     return '/';
   });
   const [pageLoading, setPageLoading] = useState(true);
-  const [cartOpen, setCartOpen] = useState(false);
   const [buddyOpen, setBuddyOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All Categories');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const {
+    cartItems,
+    cartCount,
+    cartOpen,
+    setCartOpen,
+    globalToast,
+    hideToast,
+    addToCart,
+    buyNow: handleBuyNow,
+    proceedToCheckout,
+  } = useCart();
+
+  useEffect(() => {
+    if (currentPath === '/cart') {
+      setCartOpen(true);
+    }
+  }, [currentPath, setCartOpen]);
+
+  useEffect(() => {
+    const handleOpenCart = () => setCartOpen(true);
+    window.addEventListener('supernova:open-cart', handleOpenCart);
+    return () => window.removeEventListener('supernova:open-cart', handleOpenCart);
+  }, [setCartOpen]);
 
   useEffect(() => {
     const timer = setTimeout(() => setPageLoading(false), GLOBAL_SKELETON_MS);
@@ -179,27 +260,59 @@ export default function App() {
     return () => document.removeEventListener('click', handleLinkClick);
   }, []);
 
-  /* ── Cart helpers ── */
-  const addToCart = useCallback((product) => {
-    setCartItems((prev) => {
-      const existing = prev.find((i) => i._id === product._id);
-      if (existing) {
-        return prev.map((i) =>
-          i._id === product._id ? { ...i, qty: i.qty + 1 } : i
-        );
-      }
-      return [...prev, { ...product, qty: 1 }];
-    });
-  }, []);
-
-  const cartCount = cartItems.reduce((s, i) => s + i.qty, 0);
-
   /* ── Category selection from strip ── */
   const handleCategorySelect = useCallback((cat) => {
     setActiveCategory(cat);
     const el = document.getElementById('shop-grid');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
+
+  const isAuthPage = currentPath === '/login' || currentPath === '/signup';
+  const isSellPage = currentPath === '/sell';
+  const isSellerDashboard = currentPath.startsWith('/seller');
+  const isAdminDashboard = currentPath.startsWith('/admin');
+
+  if (isAuthPage) {
+    return (
+      <>
+        <SVGDefs />
+        <AuthPage initialMode={currentPath === '/login' ? 'login' : 'signup'} />
+      </>
+    );
+  }
+
+  if (isSellPage) {
+    return (
+      <>
+        <SVGDefs />
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <SellerLanding />
+        </Suspense>
+      </>
+    );
+  }
+
+  if (isSellerDashboard) {
+    return (
+      <>
+        <SVGDefs />
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <SellerDashboard />
+        </Suspense>
+      </>
+    );
+  }
+
+  if (isAdminDashboard) {
+    return (
+      <>
+        <SVGDefs />
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <AdminDashboard />
+        </Suspense>
+      </>
+    );
+  }
 
   return (
     <>
@@ -213,7 +326,56 @@ export default function App() {
         onBuddyClick={() => setBuddyOpen(true)}
       />
 
-      {currentPath.startsWith('/products') ? (
+      {currentPath.startsWith('/checkout') ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <Suspense fallback={<RouteLoadingFallback />}>
+            <Checkout />
+          </Suspense>
+        </main>
+      ) : currentPath === '/orders' || currentPath === '/orders/' ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <Suspense fallback={<RouteLoadingFallback />}>
+            <OrdersPage />
+          </Suspense>
+        </main>
+      ) : currentPath.startsWith('/orders/') ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <Suspense fallback={<RouteLoadingFallback />}>
+            <OrderDetailPage />
+          </Suspense>
+        </main>
+      ) : currentPath.startsWith('/profile') ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <Suspense fallback={<RouteLoadingFallback />}>
+            <ProfilePage />
+          </Suspense>
+        </main>
+      ) : currentPath.startsWith('/addresses') ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <Suspense fallback={<RouteLoadingFallback />}>
+            <DashboardView type="addresses" />
+          </Suspense>
+        </main>
+      ) : currentPath.startsWith('/wishlist') ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <Suspense fallback={<RouteLoadingFallback />}>
+            <DashboardView type="wishlist" />
+          </Suspense>
+        </main>
+      ) : currentPath.startsWith('/product/') ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <ProductDetail
+            onAddToCart={addToCart}
+            onBuyNow={handleBuyNow}
+          />
+        </main>
+      ) : currentPath.startsWith('/deals') ? (
+        <main style={{ width: '100%', margin: '0 auto' }}>
+          <Deals
+            onAddToCart={addToCart}
+          />
+        </main>
+      ) : currentPath.startsWith('/products') ? (
         <main style={{ width: '100%', margin: '0 auto' }}>
           <ProductsPage
             searchQuery={searchQuery}
@@ -223,27 +385,29 @@ export default function App() {
         </main>
       ) : (
         <main style={{ width: '100%', margin: '0 auto', padding: '32px 0 0' }}>
-          <Hero loading={pageLoading} onBuddyClick={() => setBuddyOpen(true)} />
+          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px', boxSizing: 'border-box' }}>
+            <Hero loading={pageLoading} onBuddyClick={() => setBuddyOpen(true)} />
 
-          <div className="scroll-reveal">
-            <CategoryStrip
-              loading={pageLoading}
-              activeCategory={activeCategory}
-              onSelect={handleCategorySelect}
-            />
-          </div>
+            <div className="scroll-reveal">
+              <CategoryStrip
+                loading={pageLoading}
+                activeCategory={activeCategory}
+                onSelect={handleCategorySelect}
+              />
+            </div>
 
-          <div className="scroll-reveal">
-            <ProductGrid
-              activeCategory={activeCategory}
-              searchQuery={searchQuery}
-              onAddToCart={addToCart}
-              onBuddyClick={() => setBuddyOpen(true)}
-            />
-          </div>
+            <div className="scroll-reveal">
+              <ProductGrid
+                activeCategory={activeCategory}
+                searchQuery={searchQuery}
+                onAddToCart={addToCart}
+                onBuddyClick={() => setBuddyOpen(true)}
+              />
+            </div>
 
-          <div className="scroll-reveal">
-            <TrustStrip />
+            <div className="scroll-reveal">
+              <TrustStrip />
+            </div>
           </div>
         </main>
       )}
@@ -256,7 +420,7 @@ export default function App() {
         isOpen={cartOpen}
         onClose={() => setCartOpen(false)}
         items={cartItems}
-        setItems={setCartItems}
+        onCheckout={proceedToCheckout}
       />
 
       <AIBuddyDrawer
@@ -273,6 +437,24 @@ export default function App() {
           onClick={() => setBuddyOpen(true)}
         />
       )}
+
+      {globalToast && (
+        <Toast
+          message={globalToast}
+          onClose={hideToast}
+          onOpenCart={() => setCartOpen(true)}
+        />
+      )}
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
+    </AuthProvider>
   );
 }

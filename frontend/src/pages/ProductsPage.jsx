@@ -64,7 +64,14 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
     return match || 'All Categories';
   };
 
+  const getInitialSearchParam = () => {
+    if (typeof window === 'undefined') return '';
+    const params = new URLSearchParams(window.location.search);
+    return params.get('q') || '';
+  };
+
   const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
+  const [urlSearchQuery, setUrlSearchQuery] = useState(getInitialSearchParam);
   const [minPriceInput, setMinPriceInput] = useState('');
   const [maxPriceInput, setMaxPriceInput] = useState('');
   const [appliedMinPrice, setAppliedMinPrice] = useState('');
@@ -76,6 +83,8 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [toast, setToast] = useState(null);
   const [filterLoading, setFilterLoading] = useState(true);
+
+  const effectiveSearch = (urlSearchQuery || searchQuery || '').trim();
 
   const sortRef = useRef(null);
   const filterTimerRef = useRef(null);
@@ -107,15 +116,27 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
     setTimeout(() => setToast(null), 2600);
   };
 
-  // Sync category state when URL changes (popstate)
+  // Sync category and search state when URL changes (popstate)
   useEffect(() => {
     const handlePopState = () => {
       triggerFilterShimmer();
       setSelectedCategory(getInitialCategory());
+      setUrlSearchQuery(getInitialSearchParam());
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  const handleClearSearch = () => {
+    triggerFilterShimmer();
+    setUrlSearchQuery('');
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      params.delete('q');
+      const newQuery = params.toString() ? `?${params.toString()}` : '';
+      window.history.replaceState({}, '', `/products${newQuery}`);
+    }
+  };
 
   // Update URL search params when category changes
   const handleSelectCategory = (catName) => {
@@ -181,6 +202,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
   const handleResetAll = () => {
     triggerFilterShimmer();
     handleSelectCategory('All Categories');
+    handleClearSearch();
     setMinPriceInput('');
     setMaxPriceInput('');
     setAppliedMinPrice('');
@@ -202,13 +224,14 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
       );
     }
 
-    // Search query filter
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
+    // Search query filter (title, category, or description)
+    if (effectiveSearch) {
+      const q = effectiveSearch.toLowerCase();
       list = list.filter(
         (p) =>
           p.title.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q)
+          p.category.toLowerCase().includes(q) ||
+          (p.description && p.description.toLowerCase().includes(q))
       );
     }
 
@@ -237,7 +260,7 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
     return list;
   }, [
     selectedCategory,
-    searchQuery,
+    effectiveSearch,
     appliedMinPrice,
     appliedMaxPrice,
     minRating,
@@ -269,13 +292,13 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
     appliedMinPrice !== '' ||
     appliedMaxPrice !== '' ||
     minRating > 0 ||
-    searchQuery.trim() !== '';
+    effectiveSearch !== '';
 
   const activeFiltersCount =
     (selectedCategory !== 'All Categories' ? 1 : 0) +
     (appliedMinPrice !== '' || appliedMaxPrice !== '' ? 1 : 0) +
     (minRating > 0 ? 1 : 0) +
-    (searchQuery.trim() !== '' ? 1 : 0);
+    (effectiveSearch !== '' ? 1 : 0);
 
   // Reusable Filter Sidebar Content
   const renderFilterSections = () => (
@@ -393,7 +416,11 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
           <ChevronRight size={13} strokeWidth={2} />
         </span>
         <span className={styles.current}>
-          {selectedCategory !== 'All Categories' ? selectedCategory : 'All Products'}
+          {effectiveSearch
+            ? `Search: "${effectiveSearch}"`
+            : selectedCategory !== 'All Categories'
+            ? selectedCategory
+            : 'All Products'}
         </span>
       </nav>
 
@@ -401,12 +428,25 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
       <div className={styles.headerRow}>
         <div className={styles.titleArea}>
           <h1 className={styles.title}>
-            {selectedCategory !== 'All Categories' ? selectedCategory : 'All Products'}
+            {effectiveSearch
+              ? `Results for "${effectiveSearch}"`
+              : selectedCategory !== 'All Categories'
+              ? selectedCategory
+              : 'All Products'}
           </h1>
           <span className={styles.countBadge}>
             {filteredProducts.length}{' '}
             {filteredProducts.length === 1 ? 'product found' : 'products found'}
           </span>
+          {effectiveSearch && (
+            <button
+              type="button"
+              className={styles.clearSearchBtn}
+              onClick={handleClearSearch}
+            >
+              Clear Search ×
+            </button>
+          )}
         </div>
 
         <div className={styles.controlsArea}>
@@ -515,9 +555,17 @@ export default function ProductsPage({ searchQuery = '', onAddToCart }) {
             </div>
           )}
 
-          {searchQuery.trim() && (
+          {effectiveSearch && (
             <div className={styles.chip}>
-              <span>Search: "{searchQuery.trim()}"</span>
+              <span>Search: "{effectiveSearch}"</span>
+              <button
+                type="button"
+                className={styles.chipRemove}
+                onClick={handleClearSearch}
+                aria-label="Remove search filter"
+              >
+                <X size={13} strokeWidth={2.5} />
+              </button>
             </div>
           )}
 

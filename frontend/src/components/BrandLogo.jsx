@@ -1,11 +1,11 @@
 import { useId } from 'react';
 import styles from './BrandLogo.module.scss';
 
-export default function BrandLogo({ className = '', href = '/' }) {
+export default function BrandLogo({ className = '', href = '/', onClick }) {
   const clipId = useId();
 
   return (
-    <a href={href} className={`${styles.logo} ${className}`} aria-label="SUPERNOVA">
+    <a href={href} onClick={onClick} className={`${styles.logo} ${className}`} aria-label="SUPERNOVA">
       <span className={styles.text}>SUPERN</span>
       <span className={styles.emblem} aria-hidden="true">
         <svg

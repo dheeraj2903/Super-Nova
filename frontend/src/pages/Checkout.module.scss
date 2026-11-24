@@ -1,0 +1,675 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.checkoutPage {
+  min-height: calc(100vh - 70px);
+  background-color: $bg-canvas;
+  padding: 40px 24px 80px;
+  box-sizing: border-box;
+}
+
+.inner {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+// ── Top Navigation & Breadcrumbs ─────────────────────────────────────────────
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-secondary;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.18s $ease-std;
+
+  &:hover {
+    color: $text-primary;
+  }
+}
+
+.securityBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: #F2EFE9;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 600;
+  color: #57534E;
+}
+
+.pageHeader {
+  margin-bottom: 32px;
+}
+
+.title {
+  font-family: $font-heading;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #18181B;
+  margin: 0 0 6px;
+}
+
+.subtitle {
+  font-family: $font-body;
+  font-size: 14px;
+  color: #57534E;
+  margin: 0;
+}
+
+// ── 2-Column Grid Layout (62% Left, 38% Right) ──────────────────────────────
+.checkoutGrid {
+  display: grid;
+  grid-template-columns: 1.63fr 1fr;
+  gap: 36px;
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+// ── Left Column ──────────────────────────────────────────────────────────────
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sectionCard {
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 10px rgba(24, 24, 27, 0.03);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.sectionTitle {
+  font-family: $font-heading;
+  font-size: 17px;
+  font-weight: 700;
+  color: #18181B;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.actionToggleBtn {
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #C46210;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.18s;
+
+  &:hover {
+    color: #A8500A;
+    text-decoration: underline;
+  }
+}
+
+// Address Cards Grid
+.addressList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.addressCard {
+  border: 1.5px solid #E6E1D6;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s $ease-luxury;
+  background: #FFFFFF;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  &:hover {
+    border-color: #D1C9BA;
+    background: #FAF8F5;
+  }
+
+  &.addressSelected {
+    border-color: #18181B;
+    background: #FAF8F5;
+    box-shadow: 0 4px 14px rgba(24, 24, 27, 0.06);
+  }
+}
+
+.radioCircle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #D1C9BA;
+  margin-top: 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.18s;
+
+  .addressSelected & {
+    border-color: #18181B;
+  }
+}
+
+.radioDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #18181B;
+}
+
+.addressInfo {
+  flex: 1;
+}
+
+.addressHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.recipientName {
+  font-family: $font-body;
+  font-size: 14px;
+  font-weight: 700;
+  color: #18181B;
+}
+
+.defaultBadge {
+  display: inline-block;
+  padding: 2px 7px;
+  background: #18181B;
+  color: #FFFFFF;
+  font-family: $font-body;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.addressDetails {
+  font-family: $font-body;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #57534E;
+  margin: 0;
+}
+
+// Add Address Form
+.newAddressForm {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px dashed #E6E1D6;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.2s $ease-luxury;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.formLabel {
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #18181B;
+}
+
+.formInput {
+  height: 42px;
+  padding: 0 12px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-sm;
+  font-family: $font-body;
+  font-size: 13.5px;
+  color: #18181B;
+  box-sizing: border-box;
+  transition: border-color 0.18s, box-shadow 0.18s;
+
+  &::placeholder {
+    color: #A1A1AA;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #18181B;
+    box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08);
+  }
+}
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-body;
+  font-size: 12.5px;
+  color: #57534E;
+  cursor: pointer;
+  margin-top: 2px;
+
+  input {
+    accent-color: #18181B;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+}
+
+.formBtnRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.saveAddressBtn {
+  padding: 9px 18px;
+  background: #18181B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+
+  &:hover {
+    background: #27272A;
+  }
+}
+
+.cancelAddressBtn {
+  padding: 9px 16px;
+  background: none;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 600;
+  color: #57534E;
+  cursor: pointer;
+
+  &:hover {
+    background: #F2EFE9;
+  }
+}
+
+// Payment Method Card
+.paymentCard {
+  border: 1.5px solid #18181B;
+  border-radius: 12px;
+  padding: 18px;
+  background: #FAF8F5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.paymentMainRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.paymentBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.paymentTitle {
+  font-family: $font-heading;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #18181B;
+}
+
+.paymentSubtitle {
+  font-family: $font-body;
+  font-size: 12px;
+  color: #71717A;
+}
+
+.paymentBadges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.payBadgePill {
+  padding: 3px 8px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 4px;
+  font-family: $font-body;
+  font-size: 10px;
+  font-weight: 700;
+  color: #57534E;
+}
+
+// Fallback / Offline Mock Toggle
+.mockToggleBox {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: #FFFFFF;
+  border: 1px dashed #D1C9BA;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mockText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mockLabel {
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #18181B;
+}
+
+.mockDesc {
+  font-family: $font-body;
+  font-size: 11.5px;
+  color: #71717A;
+}
+
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #E6E1D6;
+  transition: 0.25s;
+  border-radius: 22px;
+
+  &::before {
+    position: absolute;
+    content: '';
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.25s;
+    border-radius: 50%;
+  }
+}
+
+input:checked + .slider {
+  background-color: #C46210;
+}
+
+input:checked + .slider::before {
+  transform: translateX(18px);
+}
+
+// ── Right Column (Sticky Order Summary) ──────────────────────────────────────
+.rightCol {
+  position: sticky;
+  top: 90px;
+}
+
+.summaryCard {
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(24, 24, 27, 0.04);
+}
+
+.summaryTitle {
+  font-family: $font-heading;
+  font-size: 18px;
+  font-weight: 700;
+  color: #18181B;
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #E6E1D6;
+}
+
+// Product Items Mini List
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-bottom: 18px;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.itemThumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #F4F1EA;
+  border: 1px solid #E6E1D6;
+  flex-shrink: 0;
+}
+
+.itemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.itemTitle {
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 600;
+  color: #18181B;
+  @include line-clamp(1);
+}
+
+.itemMeta {
+  font-family: $font-body;
+  font-size: 11.5px;
+  color: #71717A;
+}
+
+.itemTotal {
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 700;
+  color: #18181B;
+}
+
+// Financial Rows
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 0;
+  border-top: 1px solid #E6E1D6;
+  border-bottom: 1px solid #E6E1D6;
+  margin-bottom: 18px;
+}
+
+.breakdownRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: $font-body;
+  font-size: 13.5px;
+  color: #57534E;
+}
+
+.freeTag {
+  color: #059669;
+  font-weight: 700;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+
+.totalLabel {
+  font-family: $font-heading;
+  font-size: 16px;
+  font-weight: 700;
+  color: #18181B;
+}
+
+.totalAmount {
+  font-family: $font-heading;
+  font-size: 24px;
+  font-weight: 800;
+  color: #18181B;
+}
+
+// Primary Pay CTA Button
+.payBtn {
+  width: 100%;
+  height: 48px;
+  background-color: #18181B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s $ease-luxury;
+
+  &:hover:not(:disabled) {
+    background-color: #27272A;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(24, 24, 27, 0.18);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.trustList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #F2EFE9;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: $font-body;
+  font-size: 11px;
+  color: #71717A;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+}

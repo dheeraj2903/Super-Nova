@@ -4,7 +4,7 @@
 .footer {
   border-top: 1px solid #E6E1D6;
   background: #F2EFE9;
-  padding: 40px 0 24px;
+  padding: 26px 0 18px;
   margin-top: 0;
 }
 
@@ -17,19 +17,19 @@
 
 .top {
   display: grid;
-  // Brand column is narrower; 4 link columns share the rest equally
-  grid-template-columns: 1.6fr repeat(4, 1fr);
+  // Brand column + 3 focused functional link columns
+  grid-template-columns: 1.6fr repeat(3, 1fr);
   gap: 32px;
-  margin-bottom: 36px;
+  margin-bottom: 22px;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
+    gap: 24px;
   }
 
   @media (max-width: 520px) {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
   }
 }
 
@@ -94,11 +94,21 @@
   }
 }
 
+.highlightLink {
+  color: #C46210 !important;
+  font-weight: 600;
+
+  &:hover {
+    color: #A8500A !important;
+    text-decoration: underline;
+  }
+}
+
 .bottom {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 24px;
+  padding-top: 16px;
   border-top: 1px solid $border-subtle;
   font-family: $font-body;
   font-size: 12px;

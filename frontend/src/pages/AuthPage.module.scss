@@ -1,0 +1,884 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+// ─── Main 50/50 Auth Layout Container ─────────────────────────────────────────
+.authLayout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: $bg-canvas;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  @media (max-width: 900px) {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+// ─── Left Editorial Column (Deep Charcoal #141413) ───────────────────────────
+.leftCol {
+  width: 50%;
+  height: 100vh;
+  background-color: #141413;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 48px;
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.leftTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.returnLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #A1A1AA;
+  text-decoration: none;
+  transition: color 0.18s $ease-std;
+
+  &:hover {
+    color: #FFFFFF;
+  }
+
+  svg {
+    transition: transform 0.18s $ease-std;
+  }
+
+  &:hover svg {
+    transform: translateX(-3px);
+  }
+}
+
+.brandWordmark {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 0;
+  user-select: none;
+}
+
+.brandText {
+  font-family: $font-heading;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+.brandEmblem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 24px;
+  margin: 0 1px;
+}
+
+.brandSvg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+// Centerpiece: 3-Slide Auto-Crossfade Ken Burns Motion Carousel
+.centerpiece {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 470px;
+  width: 100%;
+  margin: auto auto;
+}
+
+.showcaseFrame {
+  position: relative;
+  width: 100%;
+  max-width: 470px;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease-in-out;
+  overflow: hidden;
+
+  &.slideActive {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
+
+    .showcaseImg {
+      animation: kenBurns 4.5s ease-out forwards;
+    }
+  }
+}
+
+.showcaseImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform-origin: center center;
+}
+
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.07);
+  }
+}
+
+.showcaseBadge {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(20, 20, 19, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 5px 12px;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #FAF8F5;
+  text-transform: uppercase;
+  pointer-events: none;
+  transition: all 0.3s $ease-std;
+}
+
+.bronzeDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #C46210;
+  display: inline-block;
+  box-shadow: 0 0 6px rgba(196, 98, 16, 0.6);
+}
+
+.quoteBlock {
+  margin-top: 16px;
+  text-align: center;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.editorialQuote {
+  font-family: 'Newsreader', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: #D4D4D8;
+  margin: 0 0 4px;
+  font-weight: 400;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.quoteAuthor {
+  display: block;
+  font-family: $font-body;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8E8A84;
+}
+
+// 3 sleek minimal indicator bars (24px active, 8px inactive)
+.carouselIndicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.indicatorBar {
+  height: 4px;
+  width: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.22);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.45);
+  }
+
+  &.indicatorActive {
+    width: 24px;
+    background: #C46210;
+    box-shadow: 0 0 8px rgba(196, 98, 16, 0.45);
+  }
+}
+
+// Bottom Trust Footer
+.leftTrustFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: $font-body;
+  font-size: 11px;
+  color: #71717A;
+}
+
+.trustItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+// ─── Right Column (Warm Stone #FAF8F5, Zero-Scroll 100vh) ────────────────────
+.rightCol {
+  width: 50%;
+  height: 100vh;
+  background-color: #FAF8F5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 36px;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  @media (max-width: 900px) {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    padding: 32px 20px;
+  }
+}
+
+.mobileHeader {
+  display: none;
+  width: 100%;
+  max-width: 420px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  @media (max-width: 900px) {
+    display: flex;
+  }
+}
+
+.mobileReturn {
+  font-family: $font-body;
+  font-size: 12px;
+  font-weight: 600;
+  color: $text-secondary;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  &:hover {
+    color: $text-primary;
+  }
+}
+
+.formCard {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  margin: auto 0;
+}
+
+.formHeader {
+  margin-bottom: 14px;
+}
+
+.sellerStudioBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(196, 98, 16, 0.1);
+  border: 1px solid rgba(196, 98, 16, 0.28);
+  border-radius: $radius-pill;
+  color: $accent-primary;
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  width: fit-content;
+}
+
+.sellerBadgeDot {
+  font-size: 13px;
+  line-height: 1;
+  color: $accent-primary;
+}
+
+.heading {
+  font-family: $font-heading;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #18181B;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-family: $font-body;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #57534E;
+  margin: 0;
+}
+
+// Top Mode Toggle Pill (Create Account vs Sign In)
+.modeToggleBar {
+  display: flex;
+  width: 100%;
+  background: #EDE8DE;
+  padding: 3.5px;
+  border-radius: $radius-pill;
+  margin-bottom: 14px;
+  border: 1px solid #E2DCD2;
+}
+
+.modeToggleBtn {
+  flex: 1;
+  text-align: center;
+  padding: 7px 14px;
+  border-radius: $radius-pill;
+  border: none;
+  background: transparent;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 600;
+  color: #57534E;
+  cursor: pointer;
+  transition: all 0.2s $ease-luxury;
+
+  &.modeActive {
+    background: #FFFFFF;
+    color: #18181B;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+}
+
+// Form Elements (Comfortable 45px Inputs + Crisp Balanced Spacing)
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  width: 100%;
+}
+
+.twoColRow {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.fieldLabel {
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #18181B;
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.inputPrefixIcon {
+  position: absolute;
+  left: 14px;
+  color: #71717A;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-body;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.textInput {
+  width: 100%;
+  height: 45px;
+  padding: 0 14px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-md;
+  font-family: $font-body;
+  font-size: 14px;
+  color: #18181B;
+  box-sizing: border-box;
+  transition: border-color 0.18s, box-shadow 0.18s;
+
+  &::placeholder {
+    color: #A1A1AA;
+    font-size: 13.5px;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #18181B;
+    box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08);
+  }
+
+  &.withPrefix {
+    padding-left: 36px;
+  }
+
+  &.withEye {
+    padding-right: 42px;
+  }
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #71717A;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.18s;
+
+  &:hover {
+    color: #18181B;
+  }
+}
+
+// Terms Checkbox
+.termsLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: $font-body;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #57534E;
+  cursor: pointer;
+  user-select: none;
+  margin: 1px 0;
+}
+
+.checkbox {
+  margin-top: 1px;
+  width: 15px;
+  height: 15px;
+  accent-color: #18181B;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.inlineLink {
+  color: #C46210;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Inline Error
+.errorAlert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  border-radius: $radius-sm;
+  color: #B91C1C;
+  font-family: $font-body;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+// Solid Charcoal CTA Button
+.submitBtn {
+  width: 100%;
+  height: 44px;
+  background-color: #18181B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s $ease-luxury;
+  margin-top: 2px;
+
+  &:hover:not(:disabled) {
+    background-color: #27272A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 24, 27, 0.15);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+// Spinner
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// One-Click Preview Access Divider
+.previewDivider {
+  display: flex;
+  align-items: center;
+  margin: 14px 0 10px;
+  width: 100%;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #E6E1D6;
+  }
+}
+
+.dividerText {
+  padding: 0 10px;
+  font-family: $font-body;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8E8A84;
+}
+
+// Compact Demo Pills
+.demoPillRow {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.demoPillBtn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  background: #FFFFFF;
+  border: 1px solid #E6E1D6;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #18181B;
+  cursor: pointer;
+  transition: all 0.18s $ease-std;
+  white-space: nowrap;
+
+  &:hover {
+    background: #F2EFE9;
+    border-color: #D1C9BA;
+    transform: translateY(-1px);
+  }
+}
+
+.demoDotCustomer {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background-color: #C46210;
+  flex-shrink: 0;
+}
+
+.demoDotSeller {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background-color: #18181B;
+  flex-shrink: 0;
+}
+
+.demoDotAdmin {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background-color: #10B981;
+  flex-shrink: 0;
+}
+
+// ─── Bright & Clean Seller Studio Layout Extensions ─────────────────────────
+.sellerSandLeftCol {
+  background-color: #F3EDE2;
+  border-right: 1px solid #E6E1D6;
+  color: #18181B;
+}
+
+.sellerLeftTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.sellerBackLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #71717A;
+  text-decoration: none;
+  transition: color 0.18s $ease-std;
+
+  &:hover {
+    color: #18181B;
+  }
+
+  svg {
+    transition: transform 0.18s $ease-std;
+  }
+
+  &:hover svg {
+    transform: translateX(-3px);
+  }
+}
+
+.sellerBrandWordmark,
+.sellerBrandWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.sellerBrandText {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #18181B;
+}
+
+.sellerBadgePill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #C46210;
+  background: rgba(196, 98, 16, 0.12);
+  border: 1px solid rgba(196, 98, 16, 0.3);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.sellerCenterpiece {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 470px;
+  width: 100%;
+  margin: auto auto;
+}
+
+.sellerPhotoFrame {
+  position: relative;
+  width: 100%;
+  max-width: 470px;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  border: 1px solid #E6E1D6;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(24, 24, 27, 0.08);
+}
+
+.sellerPhotoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sellerPhotoBadge {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(231, 227, 220, 0.95);
+  padding: 5px 12px;
+  border-radius: $radius-pill;
+  font-family: $font-body;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #18181B;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.sellerBronzeDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #C46210;
+  display: inline-block;
+}
+
+.sellerCaptionBlock {
+  margin-top: 18px;
+  text-align: center;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sellerEditorialCaption {
+  font-family: 'Newsreader', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: #3F3F46;
+  margin: 0;
+  font-weight: 400;
+}
+
+.sellerCaptionAuthor {
+  display: block;
+  font-family: $font-body;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #71717A;
+}
+
+.sellerBottomSpacer {
+  height: 16px;
+  width: 100%;
+}
+
+// Elevated Crisp White Container in Right Column
+.elevatedSellerFormCard {
+  background: #FFFFFF;
+  border: 1px solid #E7E3DC;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(24, 24, 27, 0.06);
+  padding: 36px 32px;
+  box-sizing: border-box;
+  max-width: 440px;
+
+  @media (max-width: 480px) {
+    padding: 24px 20px;
+  }
+}
+
+.sellerDemoActionWrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

@@ -1,11 +1,23 @@
 import BrandLogo from '../BrandLogo';
+import { navigate } from '../../utils/navigation';
 import styles from './Footer.module.scss';
 
 const LINKS = {
-  Shop: ['New Arrivals', 'Apparel & Living', 'Design Objects', 'Curated Deals'],
-  'Customer Service': ['Order Tracking', 'Shipping & Returns', '24/7 Support', 'Help & FAQs'],
-  About: ['Our Story', 'Craftsmanship', 'Sustainability', 'Press & Editorial'],
-  Legal: ['Privacy Policy', 'Terms of Service', 'Security Architecture', 'Cookie Settings'],
+  Shop: [
+    { label: 'All Products', href: '/products' },
+    { label: 'New Arrivals', href: '/products' },
+    { label: 'Curated Deals', href: '/deals' },
+  ],
+  'Sell & Account': [
+    { label: 'Sell on Supernova', href: '/sell', isHighlighted: true },
+    { label: 'Seller Dashboard', href: '/seller/dashboard' },
+    { label: 'Order Tracking', href: '/orders' },
+  ],
+  Support: [
+    { label: 'Shipping & Returns', href: '#' },
+    { label: 'Help & FAQs', href: '#' },
+    { label: 'Contact Us', href: '#' },
+  ],
 };
 
 export default function Footer() {
@@ -25,8 +37,19 @@ export default function Footer() {
               <h4 className={styles.colHead}>{col}</h4>
               <ul className={styles.colList}>
                 {items.map((item) => (
-                  <li key={item}>
-                    <a href="#" className={styles.link}>{item}</a>
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      className={`${styles.link} ${item.isHighlighted ? styles.highlightLink : ''}`}
+                      onClick={(e) => {
+                        if (item.href.startsWith('/')) {
+                          e.preventDefault();
+                          navigate(item.href);
+                        }
+                      }}
+                    >
+                      {item.label}
+                    </a>
                   </li>
                 ))}
               </ul>

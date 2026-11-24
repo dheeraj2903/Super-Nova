@@ -33,10 +33,17 @@
 .imgWrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 11;
+  height: 175px;
   overflow: hidden;
-  background: #F4F1EA;
+  background: #F5F3EF;
   flex-shrink: 0;
+}
+
+.imgLink {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
 }
 
 .img {
@@ -46,26 +53,26 @@
   height: 100%;
   object-fit: cover;
   transform: scale(1);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .card:hover .imgWrap .img {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 // Discount pill
 .discountPill {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  left: 10px;
   background: #C46210;
   color: #FFFFFF;
   font-family: $font-body;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: $radius-pill;
   z-index: 2;
 }
@@ -73,65 +80,72 @@
 // Wishlist
 .wishBtn {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 34px;
-  height: 34px;
-  background: rgba(255, 255, 255, 0.9);
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.92);
   border: 1px solid $border-subtle;
   border-radius: 50%;
   @include flex-center;
-  color: $text-secondary;
+  color: #71717A;
   cursor: pointer;
   z-index: 2;
-  transition: color 0.2s, background 0.2s, transform 0.2s $ease-luxury;
+  transition: color 0.18s, background 0.18s, transform 0.18s $ease-luxury;
   backdrop-filter: blur(4px);
 
   &:hover {
-    background: $bg-canvas;
-    color: $accent-wishlist;
-    transform: scale(1.1);
+    background: #FFFFFF;
+    color: #E11D48;
+    transform: scale(1.08);
   }
 
   &.wishlisted {
     animation: popHeart 0.4s $ease-luxury forwards;
-    color: $accent-wishlist;
+    color: #E11D48;
   }
 }
 
-// ── Body ──────────────────────────────────────────────────────────────────────
+// ── Body (12px 14px padding) ──────────────────────────────────────────────────
 .body,
 .cardBody {
   background: #FFFFFF;
-  padding: 0.75rem 0.9rem;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
 }
 
 .meta {
-  @include flex-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .catPill {
   font-family: $font-body;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #57534E;
-  background: #F2EFE9;
-  border: 1px solid #E6E1D6;
+  letter-spacing: 0.03em;
+  color: #71717A;
+  background: #FAF8F5;
+  border: 1px solid #E7E3DC;
   border-radius: $radius-pill;
-  padding: 3px 10px;
+  padding: 2px 7px;
+  text-transform: capitalize;
 }
 
 .rating {
   font-family: $font-body;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: $text-secondary;
+  color: #18181B;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .star {
@@ -140,90 +154,111 @@
 
 .title {
   font-family: $font-heading;
-  font-size: 14.5px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: $text-primary;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: #18181B;
+  line-height: 1.35;
+  white-space: nowrap;
   overflow: hidden;
-  min-height: 2.6rem;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.titleLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: #C46210;
+  }
 }
 
 .desc {
-  @include body-text(12.5px, $text-muted);
-  @include line-clamp(2);
-  line-height: 1.55;
+  @include body-text(12px, $text-muted);
+  @include line-clamp(1);
+  line-height: 1.4;
+}
+
+// ── Price & Actions in compact single row ────────────────────────────────────
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 4px;
 }
 
 .pricing {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .price {
   font-family: $font-heading;
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
-  color: $text-primary;
+  color: #18181B;
 }
 
 .mrp {
   font-family: $font-body;
-  font-size: 13px;
+  font-size: 11.5px;
   font-variant-numeric: tabular-nums;
-  color: $text-muted;
+  color: #A1A1AA;
   text-decoration: line-through;
 }
 
-// ── Action buttons ────────────────────────────────────────────────────────────
 .actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 4px;
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .cartBtn {
-  @include btn-outline;
-  height: 36px;
-  border: 1.5px solid #18181B;
+  height: 28px;
+  border: 1px solid #18181B;
+  background: transparent;
   color: #18181B;
-  padding: 0 10px;
-  font-size: 0.82rem;
-  border-radius: 8px;
-  gap: 5px;
-  transition: all 0.22s $ease-luxury;
+  padding: 0 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: $radius-pill;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.18s $ease-luxury;
 
-  &:hover {
-    background: #F2EFE9;
-    color: #C46210;
+  &:hover,
+  &.added {
+    background: #FDF8F3;
     border-color: #C46210;
+    color: #C46210;
   }
 }
 
-.buyBtn {
-  @include btn-solid;
-  height: 36px;
+.quickBuyBtn {
+  height: 28px;
+  width: 28px;
   background: #C46210;
   color: #FFFFFF;
-  padding: 0 10px;
-  font-size: 0.82rem;
-  border-radius: 8px;
-  gap: 5px;
+  border: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
 
   &:hover {
     background: #A8500A;
-    transform: translateY(-1px);
+    transform: scale(1.05);
   }
 }

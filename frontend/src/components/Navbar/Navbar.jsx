@@ -1,8 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, User, X } from 'lucide-react';
+import {
+  Search,
+  ShoppingBag,
+  ChevronDown,
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Heart,
+  MapPin,
+  Store,
+  LogOut,
+  X,
+  User,
+} from 'lucide-react';
 import BrandLogo from '../BrandLogo';
 import { mockProducts, categories } from '../../data/mockProducts';
 import { useDebounce } from '../../hooks/useStorefront';
+import { useAuth } from '../../context/AuthContext';
+import { navigate } from '../../utils/navigation';
 import styles from './Navbar.module.scss';
 
 // Hook to sync location pathname strictly across popstate and client-side pushState
@@ -48,6 +63,7 @@ function useLocation() {
 
 export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch, searchQuery }) {
   const { pathname } = useLocation();
+  const { user, logout } = useAuth();
   const [searchFocused, setSearchFocused] = useState(false);
   const [localQuery, setLocalQuery] = useState('');
   const [accountOpen, setAccountOpen] = useState(false);
@@ -164,6 +180,15 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
               value={localQuery}
               onChange={(e) => setLocalQuery(e.target.value)}
               onFocus={() => setSearchFocused(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && localQuery.trim()) {
+                  setSearchFocused(false);
+                  const targetUrl = `/products?q=${encodeURIComponent(localQuery.trim())}`;
+                  window.history.pushState({}, '', targetUrl);
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
               aria-label="Search"
             />
             {localQuery && (
@@ -199,7 +224,14 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
                         <button
                           key={p}
                           className={styles.trendPill}
-                          onClick={() => { setLocalQuery(p); setSearchFocused(false); }}
+                          onClick={() => {
+                            setLocalQuery(p);
+                            setSearchFocused(false);
+                            const targetUrl = `/products?q=${encodeURIComponent(p)}`;
+                            window.history.pushState({}, '', targetUrl);
+                            window.dispatchEvent(new PopStateEvent('popstate'));
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
                         >
                           {p}
                         </button>
@@ -212,7 +244,12 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
                       <>
                         <p className={styles.dropLabel}>Products</p>
                         {filteredProducts.map((p) => (
-                          <div key={p._id} className={styles.miniCard}>
+                          <a
+                            key={p._id}
+                            href={`/product/${p._id}`}
+                            className={styles.miniCard}
+                            onClick={() => setSearchFocused(false)}
+                          >
                             <img src={p.image} alt={p.title} className={styles.miniImg} />
                             <div className={styles.miniInfo}>
                               <span className={styles.miniTitle}>{p.title}</span>
@@ -220,8 +257,15 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
                                 <span style={{ color: '#F59E0B' }}>★</span> {p.rating} &nbsp;·&nbsp; ₹{p.price.toLocaleString('en-IN')}
                               </span>
                             </div>
-                          </div>
+                          </a>
                         ))}
+                        <a
+                          href={`/products?q=${encodeURIComponent(debouncedQuery.trim())}`}
+                          className={styles.viewAllSearch}
+                          onClick={() => setSearchFocused(false)}
+                        >
+                          View all results for "{debouncedQuery.trim()}" →
+                        </a>
                       </>
                     ) : (
                       <p className={styles.noResults}>No products matched "{debouncedQuery}"</p>
@@ -262,61 +306,231 @@ export default function Navbar({ cartCount, onCartClick, onBuddyClick, onSearch,
               Deals
             </a>
 
-            <button className={styles.cartBtn} onClick={onCartClick} aria-label="Open cart">
-              <ShoppingCart size={15} strokeWidth={2} />
-              Cart
+            {/* Clean Icon-Only Cart Trigger with Burnt Bronze Badge */}
+            <button
+              className={styles.cartIconBtn}
+              onClick={onCartClick}
+              aria-label="Open cart"
+              title="Cart"
+            >
+              <ShoppingBag size={19} strokeWidth={2} />
               {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
             </button>
 
-            {/* Profile Avatar & Account Dropdown */}
-            <div className={styles.accountWrap} ref={accountRef}>
-              <button
-                type="button"
-                className={`${styles.avatarBtn} ${accountOpen ? styles.avatarActive : ''}`}
-                onClick={() => setAccountOpen((o) => !o)}
-                aria-label="Account menu"
-                aria-expanded={accountOpen}
+            {/* Auth / Account Section */}
+            {!user ? (
+              <a
+                href="/login"
+                className={styles.signInPill}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/login');
+                }}
               >
-                <User size={16} strokeWidth={2} />
-              </button>
+                Sign In
+              </a>
+            ) : (
+              <div className={styles.accountWrap} ref={accountRef}>
+                <button
+                  type="button"
+                  className={`${styles.userAvatarBtn} ${accountOpen ? styles.avatarActive : ''}`}
+                  onClick={() => setAccountOpen((o) => !o)}
+                  aria-label="Account menu"
+                  aria-expanded={accountOpen}
+                >
+                  <span className={styles.avatarInitial}>
+                    {(user.fullName?.firstName || user.username || 'U')[0].toUpperCase()}
+                  </span>
+                  <ChevronDown
+                    size={12}
+                    strokeWidth={2.5}
+                    className={`${styles.avatarChevron} ${accountOpen ? styles.chevronOpen : ''}`}
+                  />
+                </button>
 
-              {accountOpen && (
-                <div className={styles.accountDropdown} role="menu">
-                  <a
-                    href="/login"
-                    className={`${styles.accountItem} ${styles.accountHighlight}`}
-                    onClick={() => setAccountOpen(false)}
-                    role="menuitem"
-                  >
-                    Sign In / Create Account
-                  </a>
-                  <a
-                    href="/orders"
-                    className={styles.accountItem}
-                    onClick={() => setAccountOpen(false)}
-                    role="menuitem"
-                  >
-                    My Orders &amp; Live Tracking
-                  </a>
-                  <a
-                    href="/wishlist"
-                    className={styles.accountItem}
-                    onClick={() => setAccountOpen(false)}
-                    role="menuitem"
-                  >
-                    Wishlist
-                  </a>
-                  <a
-                    href="/partner"
-                    className={styles.accountItem}
-                    onClick={() => setAccountOpen(false)}
-                    role="menuitem"
-                  >
-                    Partner Dashboard
-                  </a>
-                </div>
-              )}
-            </div>
+                {accountOpen && (
+                  <div className={styles.accountDropdown} role="menu">
+                    {/* User Full Name, @username & Role Pill */}
+                    <div className={styles.accountHeader}>
+                      <div className={styles.accountNameRow}>
+                        <span className={styles.accountFullName}>
+                          {user.fullName
+                            ? `${user.fullName.firstName || ''} ${user.fullName.lastName || ''}`.trim() || user.username
+                            : user.username || 'User'}
+                        </span>
+                        <span
+                          className={`${styles.roleBadge} ${
+                            user.role === 'seller'
+                              ? styles.roleSeller
+                              : user.role === 'admin'
+                              ? styles.roleAdmin
+                              : styles.roleCustomer
+                          }`}
+                        >
+                          {user.role === 'seller' ? 'Seller' : user.role === 'admin' ? 'Admin' : 'Customer'}
+                        </span>
+                      </div>
+                      <div className={styles.accountUsername}>@{user.username || 'user'}</div>
+                    </div>
+
+                    {/* Role-based Links: Seller */}
+                    {user.role === 'seller' && (
+                      <div className={styles.dropdownSection}>
+                        <span className={styles.sectionLabel}>Storefront</span>
+                        <a
+                          href="/seller/dashboard"
+                          className={styles.accountItem}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setAccountOpen(false);
+                            navigate('/seller/dashboard');
+                          }}
+                          role="menuitem"
+                        >
+                          <LayoutDashboard size={14} />
+                          <span>Seller Dashboard</span>
+                        </a>
+                        <a
+                          href="/seller/products"
+                          className={styles.accountItem}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setAccountOpen(false);
+                            navigate('/seller/products');
+                          }}
+                          role="menuitem"
+                        >
+                          <Package size={14} />
+                          <span>My Products</span>
+                        </a>
+                        <a
+                          href="/seller/orders"
+                          className={styles.accountItem}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setAccountOpen(false);
+                            navigate('/seller/orders');
+                          }}
+                          role="menuitem"
+                        >
+                          <ShoppingCart size={14} />
+                          <span>Seller Orders</span>
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Role-based Links: Admin */}
+                    {user.role === 'admin' && (
+                      <div className={styles.dropdownSection}>
+                        <span className={styles.sectionLabel}>Administration</span>
+                        <a
+                          href="/admin/dashboard"
+                          className={styles.accountItem}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setAccountOpen(false);
+                            navigate('/admin/dashboard');
+                          }}
+                          role="menuitem"
+                        >
+                          <LayoutDashboard size={14} />
+                          <span>Admin Dashboard</span>
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Always show for shoppers/users */}
+                    <div className={styles.dropdownSection}>
+                      <span className={styles.sectionLabel}>Customer Account</span>
+                      <a
+                        href="/profile"
+                        className={styles.accountItem}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAccountOpen(false);
+                          navigate('/profile');
+                        }}
+                        role="menuitem"
+                      >
+                        <User size={14} />
+                        <span>My Profile</span>
+                      </a>
+                      <a
+                        href="/orders"
+                        className={styles.accountItem}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAccountOpen(false);
+                          navigate('/orders');
+                        }}
+                        role="menuitem"
+                      >
+                        <Package size={14} />
+                        <span>My Orders</span>
+                      </a>
+                      <a
+                        href="/addresses"
+                        className={styles.accountItem}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAccountOpen(false);
+                          navigate('/addresses');
+                        }}
+                        role="menuitem"
+                      >
+                        <MapPin size={14} />
+                        <span>Saved Addresses</span>
+                      </a>
+                      <a
+                        href="/wishlist"
+                        className={styles.accountItem}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAccountOpen(false);
+                          navigate('/wishlist');
+                        }}
+                        role="menuitem"
+                      >
+                        <Heart size={14} />
+                        <span>Wishlist</span>
+                      </a>
+
+                      {user.role !== 'seller' && (
+                        <a
+                          href="/sell"
+                          className={styles.accountItem}
+                          style={{ color: '#C46210' }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setAccountOpen(false);
+                            navigate('/sell');
+                          }}
+                          role="menuitem"
+                        >
+                          <Store size={14} />
+                          <span style={{ fontWeight: 600 }}>Sell on Supernova</span>
+                        </a>
+                      )}
+                    </div>
+
+                    <div className={styles.dropdownDivider} />
+
+                    <button
+                      type="button"
+                      className={styles.signOutBtn}
+                      onClick={() => {
+                        setAccountOpen(false);
+                        logout();
+                      }}
+                      role="menuitem"
+                    >
+                      <LogOut size={14} />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
         </div>
       </header>
